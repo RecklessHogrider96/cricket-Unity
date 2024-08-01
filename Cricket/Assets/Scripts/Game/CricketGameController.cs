@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CricketGameController
+public class CricketGameController : MonoBehaviour
 {
     
 }
