@@ -3,9 +3,11 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     public BallCollisionDetection ballCollisionDetection; // Reference to the BallCollisionDetection script
+    public Vector3 bounceTargetPosition; // The position on the pitch where the ball should bounce
 
     private Vector3 initPosition;
     private bool throwBall = false;
+    private Vector3 currentVelocity;
 
     private void OnEnable()
     {
@@ -25,15 +27,16 @@ public class BallController : MonoBehaviour
     {
         if (throwBall)
         {
-            // Current velocity of the ball
-            Vector3 velocity = new(0f, 0f, CricketGameModel.Instance.GetBowlerMaxSpeed());
-            ballCollisionDetection.MoveBallAndCheckForCollision(velocity, CricketGameModel.Instance.GetBounceFactor());
+            ballCollisionDetection.MoveBallAndCheckForCollision(currentVelocity, bounceTargetPosition, CricketGameModel.Instance.GetBounceFactor());
         }
     }
 
-    private void OnThrowBallEventHandler()
+    private void OnThrowBallEventHandler(Vector3 bounceTargetPosition, Vector3 initialVelocity)
     {
         ResetBall();
+
+        this.bounceTargetPosition = bounceTargetPosition;
+        this.currentVelocity = initialVelocity;
 
         throwBall = true;
     }
@@ -41,6 +44,8 @@ public class BallController : MonoBehaviour
     private void ResetBall()
     {
         transform.position = initPosition;
+        this.currentVelocity = Vector3.zero;
+
         throwBall = false;
     }
 }

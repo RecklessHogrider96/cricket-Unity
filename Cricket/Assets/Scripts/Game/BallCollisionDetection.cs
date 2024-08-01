@@ -3,19 +3,26 @@ using UnityEngine;
 public class BallCollisionDetection : MonoBehaviour
 {
     private Vector3 previousPosition;
+    private Vector3 currentVelocity;
 
     private void Start()
     {
         previousPosition = transform.position;
     }
 
-    public void MoveBallAndCheckForCollision(Vector3 velocity, float bounceFactor)
+    public void MoveBallAndCheckForCollision(Vector3 initialVelocity, Vector3 bounceTargetPosition, float bounceFactor)
     {
+        currentVelocity = initialVelocity;
+
         // Apply gravity to the velocity
-        velocity += new Vector3(0, CricketGameModel.Instance.GetGravity() * Time.deltaTime, 0);
+        currentVelocity += new Vector3(0, CricketGameModel.Instance.GetGravity() * Time.deltaTime, 0);
+
+        // Calculate the direction towards the bounce target
+        Vector3 directionToTarget = (bounceTargetPosition - transform.position).normalized;
+        currentVelocity = Vector3.Lerp(currentVelocity, directionToTarget * currentVelocity.magnitude, Time.deltaTime * 0.5f);
 
         // Move the ball manually
-        transform.position += velocity * Time.deltaTime;
+        transform.position += currentVelocity * Time.deltaTime;
 
         // Ray from previous position to current position
         Ray ray = new Ray(previousPosition, transform.position - previousPosition);
@@ -26,7 +33,7 @@ public class BallCollisionDetection : MonoBehaviour
         {
             if (hit.collider.tag == "Pitch")
             {
-                HandleBallCollision(velocity, bounceFactor, hit.point, hit.normal);
+                HandleBallCollision(currentVelocity, bounceFactor, hit.point, hit.normal);
             }
         }
 
@@ -38,9 +45,9 @@ public class BallCollisionDetection : MonoBehaviour
     {
         // Reflect the velocity based on the collision normal
         Vector3 reflectedVelocity = Vector3.Reflect(velocity, collisionNormal);
-        velocity = reflectedVelocity * bounceFactor;
+        currentVelocity = reflectedVelocity * bounceFactor;
 
-        // Adjust the ball's position slightly above the collision point to prevent it from getting stuck
+        // Adjust the ball's position slightly above the target point to simulate a bounce
         transform.position = collisionPoint + collisionNormal * 0.05f;
     }
 }

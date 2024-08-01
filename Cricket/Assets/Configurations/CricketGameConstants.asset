@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d517c2444bbb25418900039a49c7c11, type: 3}
   m_Name: CricketGameConstants
   m_EditorClassIdentifier: 
-  gravity: -9.81
+  gravity: -10
