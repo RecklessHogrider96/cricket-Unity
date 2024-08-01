@@ -127,14 +127,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850350271}
+  - component: {fileID: 850350267}
   - component: {fileID: 850350270}
   - component: {fileID: 850350269}
   - component: {fileID: 850350268}
-  - component: {fileID: 850350267}
-  - component: {fileID: 850350272}
   m_Layer: 0
   m_Name: Ball
-  m_TagString: Untagged
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,7 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34459d8bd022904bb96cb68df63cada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: -1, z: 0}
+  velocity: {x: 0, y: -1, z: 20}
+  gravity: -9.81
   bounceFactor: 0.7
 --- !u!135 &850350268
 SphereCollider:
@@ -172,7 +172,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &850350269
 MeshRenderer:
@@ -236,39 +236,12 @@ Transform:
   m_GameObject: {fileID: 850350266}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.75, y: 6.356, z: 16.5}
+  m_LocalPosition: {x: -1.5, y: 6, z: -15}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &850350272
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 850350266}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1255142048
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,13 +535,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346194990}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9729519, z: -0.2310079, w: 0}
-  m_LocalPosition: {x: 0, y: 17, z: 36.7}
+  m_LocalRotation: {x: 0.24013077, y: -0, z: -0, w: 0.9707406}
+  m_LocalPosition: {x: 0, y: 15, z: -31.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 26.713, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 27.789, y: 0, z: 0}
 --- !u!1 &2006067371
 GameObject:
   m_ObjectHideFlags: 0

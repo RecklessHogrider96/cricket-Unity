@@ -2,22 +2,23 @@ using UnityEngine;
 
 public class BallCollisionDetection : MonoBehaviour
 {
-    [SerializeField] private Vector3 velocity;
-    [SerializeField] private float bounceFactor = 0.7f;
-
-    private Rigidbody rb;
+    public Vector3 velocity; // Current velocity of the ball
+    public float gravity = -9.81f; // Gravity constant
+    public float bounceFactor = 0.7f; // Control the bounce intensity
     private Vector3 previousPosition;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         previousPosition = transform.position;
     }
 
-    private void FixedUpdate()
+    void Update()
     {
-        // Move the ball manually if Rigidbody is disabled
-        //rb.MovePosition(rb.position + velocity * Time.deltaTime);
+        // Apply gravity to the velocity
+        velocity += new Vector3(0, gravity * Time.deltaTime, 0);
+
+        // Move the ball manually
+        transform.position += velocity * Time.deltaTime;
 
         // Ray from previous position to current position
         Ray ray = new Ray(previousPosition, transform.position - previousPosition);
@@ -26,22 +27,10 @@ public class BallCollisionDetection : MonoBehaviour
         // Check if the ball has collided with the pitch
         if (Physics.Raycast(ray, out hit, (transform.position - previousPosition).magnitude))
         {
-            Debug.Log("Raycast hit: " + hit.collider.name);
-
             if (hit.collider.tag == "Pitch")
             {
-                // Handle the collision
-                Debug.Log("Ball collided with the pitch");
                 HandleBallCollision(hit.point, hit.normal);
             }
-            else
-            {
-                Debug.Log($"Collision detected but not with Pitch = {hit.collider.tag}.");
-            }
-        }
-        else
-        {
-            Debug.Log("No collision detected.");
         }
 
         // Update the previous position
@@ -50,20 +39,11 @@ public class BallCollisionDetection : MonoBehaviour
 
     void HandleBallCollision(Vector3 collisionPoint, Vector3 collisionNormal)
     {
-        // Calculate the bounce
-        Vector3 incomingVelocity = rb.linearVelocity;
+        // Reflect the velocity based on the collision normal
+        Vector3 reflectedVelocity = Vector3.Reflect(velocity, collisionNormal);
+        velocity = reflectedVelocity * bounceFactor;
 
-        // Reflect the incoming velocity based on the collision normal
-        Vector3 reflectedVelocity = Vector3.Reflect(incomingVelocity, collisionNormal);
-
-        // Apply a bounce factor to control the intensity of the bounce
-        bounceFactor = 0.7f; // Adjust this value for more or less bounce
-        Vector3 bounceVelocity = reflectedVelocity * bounceFactor;
-
-        // Apply the new velocity to the ball
-        rb.linearVelocity = bounceVelocity;
-
-        // Update the ball's position slightly above the collision point to prevent it from getting stuck
+        // Adjust the ball's position slightly above the collision point to prevent it from getting stuck
         transform.position = collisionPoint + collisionNormal * 0.05f;
     }
 }
