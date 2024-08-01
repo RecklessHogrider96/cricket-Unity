@@ -2,20 +2,17 @@ using UnityEngine;
 
 public class BallCollisionDetection : MonoBehaviour
 {
-    public Vector3 velocity; // Current velocity of the ball
-    public float gravity = -9.81f; // Gravity constant
-    public float bounceFactor = 0.7f; // Control the bounce intensity
     private Vector3 previousPosition;
 
-    void Start()
+    private void Start()
     {
         previousPosition = transform.position;
     }
 
-    void Update()
+    public void MoveBallAndCheckForCollision(Vector3 velocity, float bounceFactor)
     {
         // Apply gravity to the velocity
-        velocity += new Vector3(0, gravity * Time.deltaTime, 0);
+        velocity += new Vector3(0, CricketGameModel.Instance.GetGravity() * Time.deltaTime, 0);
 
         // Move the ball manually
         transform.position += velocity * Time.deltaTime;
@@ -29,7 +26,7 @@ public class BallCollisionDetection : MonoBehaviour
         {
             if (hit.collider.tag == "Pitch")
             {
-                HandleBallCollision(hit.point, hit.normal);
+                HandleBallCollision(velocity, bounceFactor, hit.point, hit.normal);
             }
         }
 
@@ -37,7 +34,7 @@ public class BallCollisionDetection : MonoBehaviour
         previousPosition = transform.position;
     }
 
-    void HandleBallCollision(Vector3 collisionPoint, Vector3 collisionNormal)
+    private void HandleBallCollision(Vector3 velocity, float bounceFactor, Vector3 collisionPoint, Vector3 collisionNormal)
     {
         // Reflect the velocity based on the collision normal
         Vector3 reflectedVelocity = Vector3.Reflect(velocity, collisionNormal);

@@ -148,6 +148,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1101531338}
+  - {fileID: 1372049206}
+  - {fileID: 513940620}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &238216790
@@ -182,6 +184,53 @@ Transform:
   - {fileID: 1255142051}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &513940619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 513940620}
+  - component: {fileID: 513940621}
+  m_Layer: 0
+  m_Name: CricketDataController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &513940620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513940619}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 213672353}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &513940621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513940619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98a78a9a2edcffe4b849af3d2dca9cd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameConstants: {fileID: 11400000, guid: 5c25ca0e432c46a46a6c8b9c1f0a828b, type: 2}
+  bowlerConfigData: {fileID: 11400000, guid: 3a1d1418e05addd48b39aba9a6a7f55c, type: 2}
+  bounceFactor: 0.7
 --- !u!1 &646213952
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +304,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850350271}
+  - component: {fileID: 850350272}
   - component: {fileID: 850350267}
   - component: {fileID: 850350270}
   - component: {fileID: 850350269}
@@ -278,9 +328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34459d8bd022904bb96cb68df63cada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: -1, z: 20}
-  gravity: -9.81
-  bounceFactor: 0.7
 --- !u!135 &850350268
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -370,6 +417,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1795826477}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850350272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850350266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c72b10ca829424fab8d87dcc0e8d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballCollisionDetection: {fileID: 850350267}
 --- !u!1 &1101531337
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,6 +774,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 646213953}
   m_LocalEulerAnglesHint: {x: 27.789, y: 0, z: 0}
+--- !u!1 &1372049205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1372049206}
+  - component: {fileID: 1372049207}
+  m_Layer: 0
+  m_Name: CricketGameModel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1372049206
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372049205}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 213672353}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1372049207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372049205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 597bda693b66f4b4d808d18078fcfa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldDestroyOnLoad: 1
+  bowlerType: 0
+  bowlingArm: 1
+  cricketDataController: {fileID: 513940621}
 --- !u!1 &1795826476
 GameObject:
   m_ObjectHideFlags: 0
