@@ -8,10 +8,8 @@ public class CricketGameController : MonoBehaviour
         {
             GetPitchMarkerPositionEvent.Instance.Invoke(markerPosition => 
             {
-                // Current velocity of the ball
-                Vector3 velocity = new Vector3(0f, 0f, CricketGameModel.Instance.GetBowlerMaxSpeed());
                 // Throw the ball
-                ThrowBallEvent.Instance.Invoke(markerPosition, velocity);
+                ThrowBallEvent.Instance.Invoke(markerPosition, CricketGameModel.Instance.GetBowlerMaxSpeed());
             });
         }
     }
