@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    public Vector3 bounceTargetPosition; // The position on the pitch where the ball should bounce
-    public float bounceFactor = 0.7f; // The factor to reduce velocity after bounce
-    public float gravity = 9.81f; // Gravity constant
-
+    private Vector3 bounceTargetPosition; // The position on the pitch where the ball should bounce
+    private float bounceFactor; // The factor to reduce velocity after bounce
+    private float gravity; // Gravity constant
     private float speed;
     private Vector3 startPosition;
     private List<Vector3> trajectoryPoints; // List to store trajectory points for gizmo
@@ -15,6 +14,7 @@ public class BallController : MonoBehaviour
     private void OnEnable()
     {
         startPosition = transform.position;
+
         ThrowBallEvent.Instance.AddListener(OnThrowBallEventHandler);
     }
 
@@ -27,6 +27,8 @@ public class BallController : MonoBehaviour
     {
         ResetBall();
 
+        gravity = CricketGameModel.Instance.GetGravity();
+        bounceFactor = CricketGameModel.Instance.GetBounceFactor();
         this.speed = speed;
         this.bounceTargetPosition = bounceTargetPosition;
 
