@@ -80,34 +80,43 @@ public class BallController : MonoBehaviour
     private void CalculateBounceTrajectory(Vector3 bouncePosition)
     {
         Vector3 currentPosition = bouncePosition; // Start from the bounce point
-        float initialVelocityY = Mathf.Sqrt(2 * gravity * (currentPosition.y - 1f)); // Reflect vertical velocity after bounce
+        float initialVelocityY = Mathf.Sqrt(2 * gravity * (currentPosition.y - 1f)); // Initial vertical velocity for bounce
+
+        if (initialVelocityY == 0f)
+        {
+            initialVelocityY = Mathf.Sqrt(2 * gravity); // Set a minimal initial velocity to ensure a bounce
+        }
 
         float timeStep = Time.fixedDeltaTime;
-        float time = 0f;
         int bounceCount = 0;
 
         while (currentPosition.z <= 50 && bounceCount < maxBounces)
         {
-            currentPosition.x += 0; // Assuming no X direction change after bounce
-            currentPosition.z += speed * timeStep;
-            currentPosition.y = currentPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
+            float time = 0f;
+            Vector3 bounceStartPosition = currentPosition;
 
-            trajectoryPoints.Add(currentPosition);
-
-            // Stop calculating if the ball reaches the ground level again
-            if (currentPosition.y <= 1f)
+            // Calculate the trajectory for the current bounce
+            while (currentPosition.y > 1f || initialVelocityY > 0)
             {
-                bounceCount++;
-                if (bounceCount >= maxBounces)
+                currentPosition.x += 0; // Assuming no X direction change after bounce
+                currentPosition.z += speed * timeStep;
+                currentPosition.y = bounceStartPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
+
+                trajectoryPoints.Add(currentPosition);
+
+                // If the ball hits the ground, break to apply bounce factor
+                if (currentPosition.y < 1f)
                 {
+                    currentPosition.y = 1f; // Snap to the ground level
                     break;
                 }
-                currentPosition.y = 1f; // Reset Y to ground level after bounce
-                initialVelocityY = -initialVelocityY * bounceFactor; // Reflect and reduce vertical velocity using bounceFactor
-                time = 0; // Reset time after each bounce
+
+                time += timeStep;
             }
 
-            time += timeStep;
+            // Apply the bounce factor to the vertical velocity
+            initialVelocityY = Mathf.Abs(initialVelocityY * bounceFactor);
+            bounceCount++;
         }
     }
 
