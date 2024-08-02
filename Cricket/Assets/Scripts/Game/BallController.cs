@@ -42,16 +42,41 @@ public class BallController : MonoBehaviour
         trajectoryPoints = new List<Vector3>();
         Vector3 directionToTarget = bounceTargetPosition - startPosition;
 
-        // Simple parabola generation using the current and target positions
-        float totalTime = Mathf.Sqrt(2 * Mathf.Abs(startPosition.y - bounceTargetPosition.y) / gravity);
-        int steps = Mathf.CeilToInt(totalTime / Time.fixedDeltaTime);
+        // Horizontal distances
+        float distanceX = directionToTarget.x;
+        float distanceZ = directionToTarget.z;
+
+        // Vertical distance
+        float distanceY = directionToTarget.y;
+
+        // Total horizontal distance in XZ plane
+        float horizontalDistance = Mathf.Sqrt(distanceX * distanceX + distanceZ * distanceZ);
+
+        // Time to reach the target, considering gravity
+        float timeToTarget = Mathf.Sqrt(2 * Mathf.Abs(distanceY) / gravity);
+
+        // Initial horizontal velocities
+        float velocityX = distanceX / timeToTarget;
+        float velocityZ = distanceZ / timeToTarget;
+
+        // Calculate vertical velocity needed to reach the target considering gravity
+        float initialVelocityY = (distanceY + 0.5f * gravity * timeToTarget * timeToTarget) / timeToTarget;
+
+        // Number of steps for the trajectory
+        int steps = Mathf.CeilToInt(timeToTarget / Time.fixedDeltaTime);
 
         for (int i = 0; i <= steps; i++)
         {
             float time = i * Time.fixedDeltaTime;
-            float progress = time / totalTime;
-            Vector3 point = Vector3.Lerp(startPosition, bounceTargetPosition, progress);
-            point.y = startPosition.y + (0.5f * gravity * time * time);
+            Vector3 point = new Vector3();
+
+            // Calculate X and Z positions linearly
+            point.x = startPosition.x + velocityX * time;
+            point.z = startPosition.z + velocityZ * time;
+
+            // Calculate Y position using the parabolic equation
+            point.y = startPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
+
             trajectoryPoints.Add(point);
         }
     }
