@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    private Vector3 bounceTargetPosition; // The position on the pitch where the ball should bounce
     private float bounceFactor; // The factor to reduce velocity after bounce
     private float gravity; // Gravity constant
     private float speed;
     private Vector3 startPosition;
     private List<Vector3> trajectoryPoints; // List to store trajectory points for gizmo
+    private int maxBounces = 100; // Maximum number of bounces
 
     private void OnEnable()
     {
         startPosition = transform.position;
-
         ThrowBallEvent.Instance.AddListener(OnThrowBallEventHandler);
     }
 
@@ -30,78 +29,105 @@ public class BallController : MonoBehaviour
         gravity = CricketGameModel.Instance.GetGravity();
         bounceFactor = CricketGameModel.Instance.GetBounceFactor();
         this.speed = speed;
-        this.bounceTargetPosition = bounceTargetPosition;
 
-        // Calculate the initial trajectory points from start to bounce target
-        CalculateTrajectory();
+        // Clear previous trajectory points
+        trajectoryPoints = new List<Vector3>();
 
-        // Start moving the ball along the calculated trajectory at the specified speed
+        // Calculate the trajectory to the pitch marker
+        CalculateInitialTrajectory(bounceTargetPosition);
+
+        // Calculate the trajectory after the bounce
+        CalculateBounceTrajectory(bounceTargetPosition);
+
+        // Start moving the ball along the calculated trajectory
         StartCoroutine(MoveBallAlongTrajectory());
     }
 
-    private void CalculateTrajectory()
+    private void CalculateInitialTrajectory(Vector3 targetPosition)
     {
-        trajectoryPoints = new List<Vector3>();
-        Vector3 directionToTarget = bounceTargetPosition - startPosition;
+        Vector3 currentPosition = startPosition;
 
-        // Horizontal distances
-        float distanceX = directionToTarget.x;
-        float distanceZ = directionToTarget.z;
+        // Initial horizontal and vertical distances
+        float distanceX = targetPosition.x - startPosition.x;
+        float distanceZ = targetPosition.z - startPosition.z;
+        float distanceY = targetPosition.y - startPosition.y;
 
-        // Vertical distance
-        float distanceY = directionToTarget.y;
-
-        // Total horizontal distance in XZ plane
+        // Calculate time to reach the target based on the desired speed
         float horizontalDistance = Mathf.Sqrt(distanceX * distanceX + distanceZ * distanceZ);
+        float timeToTarget = horizontalDistance / speed;
 
-        // Time to reach the target, considering gravity
-        float timeToTarget = Mathf.Sqrt(2 * Mathf.Abs(distanceY) / gravity);
-
-        // Initial horizontal velocities
+        // Calculate the initial velocities in X, Y, and Z directions
         float velocityX = distanceX / timeToTarget;
         float velocityZ = distanceZ / timeToTarget;
-
-        // Calculate vertical velocity needed to reach the target considering gravity
         float initialVelocityY = (distanceY + 0.5f * gravity * timeToTarget * timeToTarget) / timeToTarget;
 
-        // Number of steps for the trajectory
-        int steps = Mathf.CeilToInt(timeToTarget / Time.fixedDeltaTime);
+        float timeStep = Time.fixedDeltaTime;
+        float time = 0f;
 
-        for (int i = 0; i <= steps; i++)
+        // Loop to calculate trajectory to the target
+        while (currentPosition.z <= targetPosition.z)
         {
-            float time = i * Time.fixedDeltaTime;
-            Vector3 point = new Vector3();
+            // Calculate the new position based on current velocity and gravity
+            currentPosition.x = startPosition.x + velocityX * time;
+            currentPosition.z = startPosition.z + velocityZ * time;
+            currentPosition.y = startPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
 
-            // Calculate X and Z positions linearly
-            point.x = startPosition.x + velocityX * time;
-            point.z = startPosition.z + velocityZ * time;
+            trajectoryPoints.Add(currentPosition);
+            time += timeStep;
+        }
+    }
 
-            // Calculate Y position using the parabolic equation
-            point.y = startPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
+    private void CalculateBounceTrajectory(Vector3 bouncePosition)
+    {
+        Vector3 currentPosition = bouncePosition; // Start from the bounce point
+        float initialVelocityY = Mathf.Sqrt(2 * gravity * (currentPosition.y - 1f)); // Reflect vertical velocity after bounce
 
-            trajectoryPoints.Add(point);
+        float timeStep = Time.fixedDeltaTime;
+        float time = 0f;
+        int bounceCount = 0;
+
+        while (currentPosition.z <= 50 && bounceCount < maxBounces)
+        {
+            currentPosition.x += 0; // Assuming no X direction change after bounce
+            currentPosition.z += speed * timeStep;
+            currentPosition.y = currentPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
+
+            trajectoryPoints.Add(currentPosition);
+
+            // Stop calculating if the ball reaches the ground level again
+            if (currentPosition.y <= 1f)
+            {
+                bounceCount++;
+                if (bounceCount >= maxBounces)
+                {
+                    break;
+                }
+                currentPosition.y = 1f; // Reset Y to ground level after bounce
+                initialVelocityY = -initialVelocityY * bounceFactor; // Reflect and reduce vertical velocity using bounceFactor
+                time = 0; // Reset time after each bounce
+            }
+
+            time += timeStep;
         }
     }
 
     private IEnumerator MoveBallAlongTrajectory()
     {
-        float journeyLength = Vector3.Distance(startPosition, bounceTargetPosition);
-        float startTime = Time.time;
-
         for (int i = 0; i < trajectoryPoints.Count - 1; i++)
         {
             float journeyTime = Vector3.Distance(trajectoryPoints[i], trajectoryPoints[i + 1]) / speed;
+
+            float startTime = Time.time;
 
             while (Time.time - startTime < journeyTime)
             {
                 transform.position = Vector3.Lerp(trajectoryPoints[i], trajectoryPoints[i + 1], (Time.time - startTime) / journeyTime);
                 yield return null;
             }
-
-            startTime = Time.time;
         }
 
-        transform.position = bounceTargetPosition;
+        // Set final position to the last point in the trajectory
+        transform.position = trajectoryPoints[trajectoryPoints.Count - 1];
     }
 
     private void ResetBall()
