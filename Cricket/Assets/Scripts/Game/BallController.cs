@@ -10,6 +10,7 @@ public class BallController : MonoBehaviour
     private Vector3 startPosition;
     [SerializeField] private List<Vector3> trajectoryPoints; // List to store trajectory points for gizmo
     private int maxBounces = 100; // Maximum number of bounces
+    private Coroutine moveCorountine;
 
     private void OnEnable()
     {
@@ -37,7 +38,7 @@ public class BallController : MonoBehaviour
         CalculateInitialTrajectory(bounceTargetPosition);
 
         // Start moving the ball along the calculated trajectory
-        StartCoroutine(MoveBallAlongTrajectory());
+        moveCorountine = StartCoroutine(MoveBallAlongTrajectory());
     }
 
     private void CalculateInitialTrajectory(Vector3 targetPosition)
@@ -129,6 +130,11 @@ public class BallController : MonoBehaviour
 
     private void ResetBall()
     {
+        if (moveCorountine != null)
+        {
+            StopCoroutine(moveCorountine);
+        }
+
         transform.position = startPosition;
     }
 
