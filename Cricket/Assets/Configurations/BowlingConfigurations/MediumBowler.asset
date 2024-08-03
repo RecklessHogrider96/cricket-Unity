@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
   m_Name: MediumBowler
   m_EditorClassIdentifier: 
-  minSpeed: 15
+  minSpeed: 20
   maxSpeed: 25
   minSpin: 0
   maxSpin: 10
