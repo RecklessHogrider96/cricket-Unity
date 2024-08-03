@@ -27,8 +27,8 @@ public class BallController : MonoBehaviour
     {
         ResetBall();
 
-        gravity = CricketGameModel.Instance.GetGravity();
-        bounceFactor = CricketGameModel.Instance.GetBounceFactor();
+        this.gravity = CricketGameModel.Instance.GetGravity();
+        this.bounceFactor = CricketGameModel.Instance.GetBounceFactor();
         this.speed = speed;
 
         // Clear previous trajectory points
