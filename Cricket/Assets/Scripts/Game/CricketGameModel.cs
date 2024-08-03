@@ -7,6 +7,16 @@ public class CricketGameModel : Singleton<CricketGameModel>
     [SerializeField] private BowlerBowlingArm bowlingArm;
     [SerializeField] private CricketDataController cricketDataController;
 
+    public void SetBowlerType(BowlerType bowlerType)
+    {
+        this.bowlerType = bowlerType;
+    }
+
+    public BowlerType GetBowlerType()
+    {
+        return bowlerType;
+    }
+
     public float GetBowlerMaxSpeed()
     {
         return cricketDataController.GetBowlerConfig(bowlerType, bowlingArm).bowlerConfigSO.maxSpeed;

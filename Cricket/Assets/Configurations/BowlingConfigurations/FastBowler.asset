@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FastBowler
   m_EditorClassIdentifier: 
   minSpeed: 17
-  maxSpeed: 25
+  maxSpeed: 50
   minSpin: 0
   maxSpin: 10
   minSwing: 0
