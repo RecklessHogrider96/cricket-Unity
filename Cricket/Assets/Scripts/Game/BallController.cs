@@ -8,7 +8,7 @@ public class BallController : MonoBehaviour
     private float gravity; // Gravity constant
     private float speed;
     private Vector3 startPosition;
-    private List<Vector3> trajectoryPoints; // List to store trajectory points for gizmo
+    [SerializeField] private List<Vector3> trajectoryPoints; // List to store trajectory points for gizmo
     private int maxBounces = 100; // Maximum number of bounces
 
     private void OnEnable()
@@ -35,9 +35,6 @@ public class BallController : MonoBehaviour
 
         // Calculate the trajectory to the pitch marker
         CalculateInitialTrajectory(bounceTargetPosition);
-
-        // Calculate the trajectory after the bounce
-        CalculateBounceTrajectory(bounceTargetPosition);
 
         // Start moving the ball along the calculated trajectory
         StartCoroutine(MoveBallAlongTrajectory());
@@ -75,48 +72,39 @@ public class BallController : MonoBehaviour
             trajectoryPoints.Add(currentPosition);
             time += timeStep;
         }
+
+        // Calculate the trajectory after the bounce
+        CalculateBounceTrajectory(trajectoryPoints[trajectoryPoints.Count - 1], new Vector3(velocityX, initialVelocityY, velocityZ));
     }
 
-    private void CalculateBounceTrajectory(Vector3 bouncePosition)
+    private void CalculateBounceTrajectory(Vector3 bouncePosition, Vector3 currentVelocity)
     {
         Vector3 currentPosition = bouncePosition; // Start from the bounce point
-        float initialVelocityY = Mathf.Sqrt(2 * gravity * (currentPosition.y - 1f)); // Initial vertical velocity for bounce
-
-        if (initialVelocityY == 0f)
-        {
-            initialVelocityY = Mathf.Sqrt(2 * gravity); // Set a minimal initial velocity to ensure a bounce
-        }
+        //Vector3 currentVelocity = new Vector3(0, 0, speed); // Assuming initial horizontal velocity only
 
         float timeStep = Time.fixedDeltaTime;
         int bounceCount = 0;
 
-        while (currentPosition.z <= 50 && bounceCount < maxBounces)
+        while (bounceCount < maxBounces)
         {
-            float time = 0f;
-            Vector3 bounceStartPosition = currentPosition;
+            currentVelocity += Physics.gravity * timeStep; // Apply gravity to the velocity
+            currentPosition += currentVelocity * timeStep;
 
-            // Calculate the trajectory for the current bounce
-            while (currentPosition.y > 1f || initialVelocityY > 0)
+            trajectoryPoints.Add(currentPosition);
+
+            // Check for ground collision
+            if (currentPosition.y <= 1f)
             {
-                currentPosition.x += 0; // Assuming no X direction change after bounce
-                currentPosition.z += speed * timeStep;
-                currentPosition.y = bounceStartPosition.y + initialVelocityY * time - 0.5f * gravity * time * time;
-
-                trajectoryPoints.Add(currentPosition);
-
-                // If the ball hits the ground, break to apply bounce factor
-                if (currentPosition.y < 1f)
-                {
-                    currentPosition.y = 1f; // Snap to the ground level
-                    break;
-                }
-
-                time += timeStep;
+                currentPosition.y = 1f; // Snap to ground level
+                currentVelocity = Vector3.Reflect(currentVelocity, Vector3.up) * bounceFactor; // Reflect and reduce velocity
+                bounceCount++;
             }
 
-            // Apply the bounce factor to the vertical velocity
-            initialVelocityY = Mathf.Abs(initialVelocityY * bounceFactor);
-            bounceCount++;
+            // Stop if velocity is too low to continue bouncing
+            if (Mathf.Abs(currentVelocity.y) < 0.01f && currentPosition.y <= 1f)
+            {
+                break;
+            }
         }
     }
 

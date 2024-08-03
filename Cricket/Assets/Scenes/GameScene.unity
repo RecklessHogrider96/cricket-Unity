@@ -230,7 +230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameConstants: {fileID: 11400000, guid: 5c25ca0e432c46a46a6c8b9c1f0a828b, type: 2}
   bowlerConfigData: {fileID: 11400000, guid: 3a1d1418e05addd48b39aba9a6a7f55c, type: 2}
-  bounceFactor: 0.7
+  bounceFactor: 0.9
 --- !u!1 &646213952
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,8 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c72b10ca829424fab8d87dcc0e8d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounceTargetPosition: {x: 0, y: 0, z: 0}
-  bounceFactor: 0.7
+  trajectoryPoints: []
 --- !u!1 &936201303
 GameObject:
   m_ObjectHideFlags: 0
