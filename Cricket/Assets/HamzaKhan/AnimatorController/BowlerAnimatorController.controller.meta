@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: afbf938b971b840609b779cfd20a878d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281523
+  packageName: Cricket Bowling Animations Pack - 8 Cricket Bowling Animations
+  packageVersion: 1.0.0
+  assetPath: Assets/HamzaKhan/AnimatorController/BowlerAnimatorController.controller
+  uploadId: 655675

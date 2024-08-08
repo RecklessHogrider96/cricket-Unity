@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 67572715fe1d24d8eb3710a1612a9a49
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 281523
+  packageName: Cricket Bowling Animations Pack - 8 Cricket Bowling Animations
+  packageVersion: 1.0.0
+  assetPath: Assets/HamzaKhan/Scripts/AnimationTester.cs
+  uploadId: 655675
