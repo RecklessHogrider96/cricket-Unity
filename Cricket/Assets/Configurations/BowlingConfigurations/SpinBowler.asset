@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
   m_Name: SpinBowler
   m_EditorClassIdentifier: 
-  minSpeed: 20
-  maxSpeed: 20
+  minSpeed: 30
+  maxSpeed: 35
   minSpin: 0
-  maxSpin: 20
+  maxSpin: 10
   minSwing: 0
-  maxSwing: 5
+  maxSwing: 3
