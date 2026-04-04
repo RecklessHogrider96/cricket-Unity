@@ -11,10 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
   m_Name: FastBowler
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   minSpeed: 35
-  maxSpeed: 40
+  maxSpeed: 42
   minSpin: 0
-  maxSpin: 5
-  minSwing: 0
-  maxSwing: 10
+  maxSpin: 1.5
+  minSwing: 0.3
+  maxSwing: 1.5
+  swingDirection: -1

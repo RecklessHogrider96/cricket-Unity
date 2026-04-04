@@ -1,47 +1,68 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Lets the player click and drag the pitch marker to choose where the ball will pitch.
+/// Responds to GetPitchMarkerPositionEvent with its current world position.
+/// </summary>
 public class DraggableBallPitchMarker : MonoBehaviour
 {
     private Vector3 offset;
     private Camera cam;
 
-    void Start()
+    private void Start()
     {
-        cam = Camera.main; // Assuming you have a main camera
-
-        GetPitchMarkerPositionEvent.Instance.AddListener(OnGetPitchMarkerPositionEventHandler);
+        cam = Camera.main;
     }
 
-    public void OnGetPitchMarkerPositionEventHandler(Action<Vector3> callback)
+    private void OnEnable()
+    {
+        GetPitchMarkerPositionEvent.Instance.AddListener(OnGetPitchMarkerPositionEvent);
+    }
+
+    private void OnDisable()
+    {
+        GetPitchMarkerPositionEvent.Instance.RemoveListener(OnGetPitchMarkerPositionEvent);
+    }
+
+    private void OnGetPitchMarkerPositionEvent(Action<Vector3> callback)
     {
         callback(transform.position);
     }
 
-    void OnMouseDown()
+    private void OnMouseDown()
     {
-        // Calculate offset between mouse position and object position
-        offset = transform.position - GetMouseWorldPosition();
+        if (TryGetMouseWorldPosition(out Vector3 worldPos))
+            offset = transform.position - worldPos;
     }
 
-    void OnMouseDrag()
+    private void OnMouseDrag()
     {
-        // Move the circle to the new mouse position
-        Vector3 newPosition = GetMouseWorldPosition() + offset;
-        newPosition.y = transform.position.y; // Lock the Y axis to stay on the pitch
-        transform.position = newPosition;
-    }
-
-    Vector3 GetMouseWorldPosition()
-    {
-        // Get the mouse position in world space
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, transform.position); // Assuming a horizontal plane (Y = 0)
-        float distance;
-        if (plane.Raycast(ray, out distance))
+        if (TryGetMouseWorldPosition(out Vector3 worldPos))
         {
-            return ray.GetPoint(distance);
+            Vector3 newPosition = worldPos + offset;
+            newPosition.y = transform.position.y;   // lock Y — marker stays on the pitch plane
+            transform.position = newPosition;
         }
-        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// Projects the mouse cursor onto the horizontal plane at the marker's Y height.
+    /// Returns false (and leaves worldPos at zero) if the ray misses the plane,
+    /// so callers can safely skip the update rather than snapping to the origin.
+    /// </summary>
+    private bool TryGetMouseWorldPosition(out Vector3 worldPos)
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, transform.position);
+
+        if (plane.Raycast(ray, out float distance))
+        {
+            worldPos = ray.GetPoint(distance);
+            return true;
+        }
+
+        worldPos = Vector3.zero;
+        return false;
     }
 }

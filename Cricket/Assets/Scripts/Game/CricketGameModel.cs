@@ -1,34 +1,66 @@
-using System;
 using UnityEngine;
 
+/// <summary>
+/// Central runtime state for the cricket game.
+/// Holds the active bowler selection and delegates all data lookups
+/// to CricketDataController — never touches ScriptableObjects directly.
+/// </summary>
 public class CricketGameModel : Singleton<CricketGameModel>
 {
     [SerializeField] private BowlerType bowlerType;
     [SerializeField] private BowlerBowlingArm bowlingArm;
     [SerializeField] private CricketDataController cricketDataController;
 
-    public void SetBowlerType(BowlerType bowlerType)
-    {
-        this.bowlerType = bowlerType;
-    }
+    // ── Bowler selection ────────────────────────────────────────────────────
 
-    public BowlerType GetBowlerType()
-    {
-        return bowlerType;
-    }
+    public void SetBowlerType(BowlerType type) => bowlerType = type;
+    public BowlerType GetBowlerType() => bowlerType;
 
-    public float GetBowlerMaxSpeed()
-    {
-        return cricketDataController.GetBowlerConfig(bowlerType, bowlingArm).bowlerConfigSO.maxSpeed;
-    }
+    public void SetBowlingArm(BowlerBowlingArm arm) => bowlingArm = arm;
+    public BowlerBowlingArm GetBowlingArm() => bowlingArm;
 
-    public float GetBounceFactor()
-    {
-        return cricketDataController.GetBounceFactor();
-    }
+    // ── Data access ─────────────────────────────────────────────────────────
 
-    public float GetGravity()
+    public CricketDataController GetDataController() => cricketDataController;
+
+    // ── Throw parameter assembly ─────────────────────────────────────────────
+
+    /// <summary>
+    /// Builds a BallThrowData for the current bowler type and arm by sampling
+    /// all ranges from the matching BowlerConfigSO.
+    /// Returns safe fallback data and logs an error if no config is found.
+    /// </summary>
+    public BallThrowData GetThrowParameters(Vector3 bounceTarget)
     {
-        return cricketDataController.GetGameConstants().gravity;
+        BowlerConfig config = cricketDataController.GetBowlerConfig(bowlerType, bowlingArm);
+
+        if (config == null)
+        {
+            Debug.LogError("[CricketGameModel] GetThrowParameters: bowler config not found. " +
+                           "Returning fallback throw data.");
+            return new BallThrowData
+            {
+                bounceTarget = bounceTarget,
+                speed        = 30f,
+                spin         = 0f,
+                swingAmount  = 0f,
+                bowlingArm   = bowlingArm
+            };
+        }
+
+        BowlerConfigSO so = config.bowlerConfigSO;
+
+        float speed  = Random.Range(so.minSpeed, so.maxSpeed);
+        float spin   = Random.Range(so.minSpin,  so.maxSpin);
+        float swing  = Random.Range(so.minSwing, so.maxSwing) * so.swingDirection;
+
+        return new BallThrowData
+        {
+            bounceTarget = bounceTarget,
+            speed        = speed,
+            spin         = spin,
+            swingAmount  = swing,
+            bowlingArm   = bowlingArm
+        };
     }
 }

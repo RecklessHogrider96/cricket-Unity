@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: MediumBowler
+  m_Script: {fileID: 11500000, guid: edcd972949fbc334992d774f977d66b9, type: 3}
+  m_Name: PitchSurfaceConfigIndia
   m_EditorClassIdentifier:
-  minSpeed: 28
-  maxSpeed: 35
-  minSpin: 0
-  maxSpin: 2.5
-  minSwing: 0.2
-  maxSwing: 1.2
-  swingDirection: 1
+  bounceFactor: 0.55
+  frictionFactor: 0.82
+  rollingFriction: 0.975

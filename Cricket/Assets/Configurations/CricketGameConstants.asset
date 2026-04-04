@@ -11,5 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d517c2444bbb25418900039a49c7c11, type: 3}
   m_Name: CricketGameConstants
-  m_EditorClassIdentifier: 
-  gravity: 10
+  m_EditorClassIdentifier:
+  gravity: 9.81
+  groundLevel: 0
+  pitchMinX: -1.52
+  pitchMaxX: 1.52
+  pitchMinZ: 0
+  pitchMaxZ: 20.12
