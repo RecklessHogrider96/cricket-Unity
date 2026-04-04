@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   bowlerName: Anil Kumble
   bowlerType: 2
+  bowlerArm: 1
   minSpeed: 21
   maxSpeed: 25
   minSwing: 0

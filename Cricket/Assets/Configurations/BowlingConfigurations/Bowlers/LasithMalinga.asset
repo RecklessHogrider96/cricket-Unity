@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: FredTrueman
+  m_Name: LasithMalinga
   m_EditorClassIdentifier:
-  bowlerName: Fred Trueman
+  bowlerName: Lasith Malinga
   bowlerType: 0
-  minSpeed: 36
-  maxSpeed: 42
-  minSwing: 0.4
+  bowlerArm: 1
+  minSpeed: 37
+  maxSpeed: 41
+  minSwing: 0.2
   maxSwing: 1.6
-  minSwingDirection: -1
-  maxSwingDirection: 0
+  minSwingDirection: -0.7
+  maxSwingDirection: 0.7
   minSpin: 0
-  maxSpin: 1
-  minSpinDirection: -0.2
-  maxSpinDirection: 0.2
+  maxSpin: 1.2
+  minSpinDirection: -0.3
+  maxSpinDirection: 0.3

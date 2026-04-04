@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   bowlerName: Pat Cummins
   bowlerType: 0
+  bowlerArm: 1
   minSpeed: 36
   maxSpeed: 43
   minSwing: 0.3

@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: IanBotham
+  m_Name: BrettLee
   m_EditorClassIdentifier:
-  bowlerName: Ian Botham
-  bowlerType: 1
-  minSpeed: 30
-  maxSpeed: 37
+  bowlerName: Brett Lee
+  bowlerType: 0
+  bowlerArm: 1
+  minSpeed: 41
+  maxSpeed: 45
   minSwing: 0.2
-  maxSwing: 1.4
-  minSwingDirection: -0.9
-  maxSwingDirection: 0.2
+  maxSwing: 1.5
+  minSwingDirection: -0.4
+  maxSwingDirection: 0.7
   minSpin: 0
   maxSpin: 1.2
-  minSpinDirection: -0.3
-  maxSpinDirection: 0.3
+  minSpinDirection: -0.2
+  maxSpinDirection: 0.2

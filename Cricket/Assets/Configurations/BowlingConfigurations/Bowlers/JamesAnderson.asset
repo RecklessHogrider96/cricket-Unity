@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   bowlerName: James Anderson
   bowlerType: 1
+  bowlerArm: 1
   minSpeed: 32
   maxSpeed: 37
   minSwing: 0.5

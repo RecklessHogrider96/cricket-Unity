@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: RichardHadlee
+  m_Name: JaspritBumrah
   m_EditorClassIdentifier:
-  bowlerName: Richard Hadlee
-  bowlerType: 1
-  minSpeed: 34
-  maxSpeed: 39
+  bowlerName: Jasprit Bumrah
+  bowlerType: 0
+  bowlerArm: 1
+  minSpeed: 38
+  maxSpeed: 43
   minSwing: 0.3
-  maxSwing: 1.5
-  minSwingDirection: -1
-  maxSwingDirection: 0.1
+  maxSwing: 1.8
+  minSwingDirection: -0.8
+  maxSwingDirection: 0.8
   minSpin: 0
-  maxSpin: 1.2
+  maxSpin: 1.5
   minSpinDirection: -0.3
   maxSpinDirection: 0.3

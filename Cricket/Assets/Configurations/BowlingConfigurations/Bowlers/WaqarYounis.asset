@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bowlerName: Waqar Younis
   bowlerType: 0
-  bowlerArm: 0
+  bowlerArm: 1
   minSpeed: 38
   maxSpeed: 44
   minSwing: 0.5

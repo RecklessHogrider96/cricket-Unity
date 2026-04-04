@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bowlerName: Muttiah Muralitharan
   bowlerType: 2
-  bowlerArm: 0
+  bowlerArm: 1
   minSpeed: 19
   maxSpeed: 23
   minSwing: 0

@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: MalcolmMarshall
+  m_Name: RavichandranAshwin
   m_EditorClassIdentifier:
-  bowlerName: Malcolm Marshall
-  bowlerType: 0
-  minSpeed: 38
-  maxSpeed: 44
-  minSwing: 0.3
-  maxSwing: 1.5
-  minSwingDirection: -0.5
-  maxSwingDirection: 0.5
-  minSpin: 0
-  maxSpin: 1.5
-  minSpinDirection: -0.3
-  maxSpinDirection: 0.3
+  bowlerName: Ravichandran Ashwin
+  bowlerType: 2
+  bowlerArm: 1
+  minSpeed: 22
+  maxSpeed: 26
+  minSwing: 0
+  maxSwing: 0.3
+  minSwingDirection: -0.2
+  maxSwingDirection: 0.2
+  minSpin: 1.5
+  maxSpin: 4.5
+  minSpinDirection: -1
+  maxSpinDirection: 0.2

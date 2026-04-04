@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: CurtlyAmbrose
-  m_EditorClassIdentifier: 
-  bowlerName: Curtly Ambrose
-  bowlerType: 0
-  bowlerArm: 0
-  minSpeed: 35
-  maxSpeed: 41
+  m_Name: HarbhajanSingh
+  m_EditorClassIdentifier:
+  bowlerName: Harbhajan Singh
+  bowlerType: 2
+  bowlerArm: 1
+  minSpeed: 22
+  maxSpeed: 26
   minSwing: 0
-  maxSwing: 0.8
-  minSwingDirection: -0.4
+  maxSwing: 0.3
+  minSwingDirection: -0.2
   maxSwingDirection: 0.2
-  minSpin: 0
-  maxSpin: 0.8
-  minSpinDirection: -0.2
-  maxSpinDirection: 0.2
+  minSpin: 1.5
+  maxSpin: 4.5
+  minSpinDirection: -1
+  maxSpinDirection: 0.3

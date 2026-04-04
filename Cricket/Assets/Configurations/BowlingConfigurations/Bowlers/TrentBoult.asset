@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: DennisLillee
+  m_Name: TrentBoult
   m_EditorClassIdentifier:
-  bowlerName: Dennis Lillee
-  bowlerType: 0
-  minSpeed: 38
-  maxSpeed: 44
-  minSwing: 0.3
-  maxSwing: 1.5
+  bowlerName: Trent Boult
+  bowlerType: 1
+  bowlerArm: 0
+  minSpeed: 36
+  maxSpeed: 40
+  minSwing: 0.5
+  maxSwing: 2
   minSwingDirection: -1
-  maxSwingDirection: 0.2
+  maxSwingDirection: 0.5
   minSpin: 0
   maxSpin: 1.2
-  minSpinDirection: -0.2
-  maxSpinDirection: 0.2
+  minSpinDirection: -0.3
+  maxSpinDirection: 0.3

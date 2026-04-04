@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: JoelGarner
+  m_Name: ZaheerKhan
   m_EditorClassIdentifier:
-  bowlerName: Joel Garner
-  bowlerType: 0
-  minSpeed: 35
-  maxSpeed: 42
-  minSwing: 0.2
-  maxSwing: 1.2
-  minSwingDirection: -0.6
-  maxSwingDirection: 0.2
+  bowlerName: Zaheer Khan
+  bowlerType: 1
+  bowlerArm: 0
+  minSpeed: 36
+  maxSpeed: 40
+  minSwing: 0.4
+  maxSwing: 1.8
+  minSwingDirection: -1
+  maxSwingDirection: 0.6
   minSpin: 0
-  maxSpin: 1
-  minSpinDirection: -0.2
-  maxSpinDirection: 0.2
+  maxSpin: 1.2
+  minSpinDirection: -0.3
+  maxSpinDirection: 0.3
