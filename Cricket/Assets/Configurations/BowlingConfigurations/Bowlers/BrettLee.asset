@@ -18,7 +18,7 @@ MonoBehaviour:
   minSpeed: 41
   maxSpeed: 45
   minSwing: 0.2
-  maxSwing: 1.5
+  maxSwing: 8
   minSwingDirection: -0.4
   maxSwingDirection: 0.7
   minSpin: 0

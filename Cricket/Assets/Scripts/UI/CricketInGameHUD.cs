@@ -29,7 +29,7 @@ using UnityEngine.UI;
 ///  [Spin Group — shown for Spin and Medium bowlers]
 ///    spinGroup         — GameObject  — parent of spin slider + label;
 ///                                      shown/hidden by bowler type
-///    spinSlider        — Slider      — signed: negative = off-break, positive = leg-break
+///    spinSlider        — Slider      — signed: negative = leg-break, positive = off-break
 ///    spinLabel         — TMP_Text    — e.g. "Spin: 3.50 m/s  (Leg)"
 ///
 /// ── Flow ─────────────────────────────────────────────────────────────────────
@@ -197,8 +197,8 @@ public class CricketInGameHUD : MonoBehaviour
         CricketGameModel.Instance.SetDeliverySpin(value);
         if (spinLabel != null)
         {
-            string dir = value >  0.01f ? "Leg"
-                       : value < -0.01f ? "Off"
+            string dir = value >  0.01f ? "Off"
+                       : value < -0.01f ? "Leg"
                        : "Straight";
             spinLabel.text = $"Spin: {Mathf.Abs(value):F2} m/s  ({dir})";
         }
@@ -267,7 +267,7 @@ public class CricketInGameHUD : MonoBehaviour
 
         if (spinSlider != null)
         {
-            // Signed range: negative = off-break, positive = leg-break
+            // Signed range: negative = leg-break, positive = off-break
             spinSlider.minValue = currentBowler.minSpinDirection * currentBowler.maxSpin;
             spinSlider.maxValue = currentBowler.maxSpinDirection * currentBowler.maxSpin;
             spinSlider.value    = (spinSlider.minValue + spinSlider.maxValue) * 0.5f;
