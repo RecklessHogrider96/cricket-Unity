@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
+  m_Name: ShaneWarne
+  m_EditorClassIdentifier:
+  bowlerName: Shane Warne
+  bowlerType: 2
+  minSpeed: 20
+  maxSpeed: 24
+  minSwing: 0
+  maxSwing: 0.4
+  minSwingDirection: -0.3
+  maxSwingDirection: 0.4
+  minSpin: 2
+  maxSpin: 5.5
+  minSpinDirection: 0.5
+  maxSpinDirection: 1

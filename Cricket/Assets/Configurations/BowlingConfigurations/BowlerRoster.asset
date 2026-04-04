@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe9c96a7557a3740a92334b9a3f41b3, type: 3}
+  m_Name: BowlerRoster
+  m_EditorClassIdentifier: 
+  bowlers:
+  - {fileID: 11400000, guid: 9147f1d6c7217f042b6e32b81ca08692, type: 2}
+  - {fileID: 11400000, guid: e5a572c235f0aca448e769f1f10ab36e, type: 2}
+  - {fileID: 11400000, guid: dbb2bd3c83ee6b141a50510e25b1c29d, type: 2}
+  - {fileID: 11400000, guid: 6cb1b61d0bdb0c8488d2ec0759683481, type: 2}
+  - {fileID: 11400000, guid: f2c4b9115753753479817baf6dfb474f, type: 2}
+  - {fileID: 11400000, guid: 1780b66a755c10b40bb67eed8813bcf6, type: 2}
+  - {fileID: 11400000, guid: f784e9e33662a704aad5c852de049667, type: 2}
+  - {fileID: 11400000, guid: c07d3fb129af1614b8b4e4af863b707f, type: 2}
+  - {fileID: 11400000, guid: ca5b5e2ca448d6748aa462e194bb5847, type: 2}
+  - {fileID: 11400000, guid: 1c9e111c77e186b478e99cbc6c1e95bf, type: 2}
+  - {fileID: 11400000, guid: 511013593d6ee2646b4b5261fb22e514, type: 2}
+  - {fileID: 11400000, guid: ca1bbc31e01344f45a71d53abfc9650f, type: 2}
+  - {fileID: 11400000, guid: ec4d9971eafa03344b1f8a066c2c339b, type: 2}
+  - {fileID: 11400000, guid: 45493761128364a4cb3a76fec8ccf9be, type: 2}
+  - {fileID: 11400000, guid: 3fbdc220e1e299d47883d31f830f864e, type: 2}
+  - {fileID: 11400000, guid: ea5ea0b61604b584e93b60d1320cb518, type: 2}
+  - {fileID: 11400000, guid: f5b68b353675a7a4f8c69ce9bd5bc495, type: 2}
+  - {fileID: 11400000, guid: 59c82efb6f3bf04488ad793d6d4c5bd6, type: 2}
+  - {fileID: 11400000, guid: c4d273c94bd52164b8a6d229c9a5b9b2, type: 2}
+  - {fileID: 11400000, guid: 02fb4059d7afb8640892d5625718ffb2, type: 2}

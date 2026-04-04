@@ -10,12 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: FastBowler
+  m_Name: GlennMcGrath
   m_EditorClassIdentifier:
-  minSpeed: 35
-  maxSpeed: 42
+  bowlerName: Glenn McGrath
+  bowlerType: 1
+  minSpeed: 32
+  maxSpeed: 38
+  minSwing: 0.2
+  maxSwing: 1.2
+  minSwingDirection: -1
+  maxSwingDirection: 0.2
   minSpin: 0
-  maxSpin: 1.5
-  minSwing: 0.3
-  maxSwing: 1.5
-  swingDirection: -1
+  maxSpin: 1
+  minSpinDirection: -0.3
+  maxSpinDirection: 0.3

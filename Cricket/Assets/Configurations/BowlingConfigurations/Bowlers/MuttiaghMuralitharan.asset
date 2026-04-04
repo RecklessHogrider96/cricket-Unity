@@ -10,12 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: MediumBowler
-  m_EditorClassIdentifier:
-  minSpeed: 28
-  maxSpeed: 35
-  minSpin: 0
-  maxSpin: 2.5
-  minSwing: 0.2
-  maxSwing: 1.2
-  swingDirection: 1
+  m_Name: MuttiaghMuralitharan
+  m_EditorClassIdentifier: 
+  bowlerName: Muttiah Muralitharan
+  bowlerType: 2
+  bowlerArm: 0
+  minSpeed: 19
+  maxSpeed: 23
+  minSwing: 0
+  maxSwing: 0.4
+  minSwingDirection: -0.3
+  maxSwingDirection: 0.3
+  minSpin: 2.5
+  maxSpin: 6
+  minSpinDirection: -1
+  maxSpinDirection: 0.3

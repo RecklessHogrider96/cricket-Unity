@@ -142,8 +142,7 @@ public class BallController : MonoBehaviour
         CricketDataController dataCtrl =
             CricketGameModel.Instance.GetDataController();
 
-        float spinSign    = data.bowlingArm == BowlerBowlingArm.Right ? 1f : -1f;
-        bool  spinApplied = false;
+        bool spinApplied = false;
         int   bounceCount = 0;
 
         // ── Phase 2a: Bouncing ────────────────────────────────────────────
@@ -170,7 +169,8 @@ public class BallController : MonoBehaviour
                 // Spin applied once, on the first bounce only
                 if (!spinApplied)
                 {
-                    velocity.x += data.spin * spinSign;
+                    // data.spin is already signed (direction baked in by HUD slider)
+                    velocity.x += data.spin;
                     spinApplied = true;
                 }
 

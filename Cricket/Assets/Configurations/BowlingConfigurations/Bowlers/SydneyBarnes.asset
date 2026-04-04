@@ -10,12 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
-  m_Name: SpinBowler
+  m_Name: SydneyBarnes
   m_EditorClassIdentifier:
-  minSpeed: 18
-  maxSpeed: 25
-  minSpin: 1.5
-  maxSpin: 5
-  minSwing: 0
-  maxSwing: 0.3
-  swingDirection: 1
+  bowlerName: Sydney Barnes
+  bowlerType: 1
+  minSpeed: 28
+  maxSpeed: 36
+  minSwing: 0.3
+  maxSwing: 1.5
+  minSwingDirection: -0.8
+  maxSwingDirection: 0.5
+  minSpin: 0.5
+  maxSpin: 3
+  minSpinDirection: -0.8
+  maxSpinDirection: 0.8

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
+  m_Name: ImranKhan
+  m_EditorClassIdentifier: 
+  bowlerName: Imran Khan
+  bowlerType: 0
+  bowlerArm: 0
+  minSpeed: 36
+  maxSpeed: 43
+  minSwing: 0.4
+  maxSwing: 1.8
+  minSwingDirection: -1
+  maxSwingDirection: 0.3
+  minSpin: 0
+  maxSpin: 1.2
+  minSpinDirection: -0.3
+  maxSpinDirection: 0.3

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
+  m_Name: FredTrueman
+  m_EditorClassIdentifier:
+  bowlerName: Fred Trueman
+  bowlerType: 0
+  minSpeed: 36
+  maxSpeed: 42
+  minSwing: 0.4
+  maxSwing: 1.6
+  minSwingDirection: -1
+  maxSwingDirection: 0
+  minSpin: 0
+  maxSpin: 1
+  minSpinDirection: -0.2
+  maxSpinDirection: 0.2

@@ -7,44 +7,30 @@ using UnityEngine;
 public class CricketDataController : MonoBehaviour
 {
     [SerializeField] private CricketGameConstants gameConstants;
-    [SerializeField] private BowlerConfigData bowlerConfigData;
+
+    [Header("Bowler Roster")]
+    [Tooltip("The full squad — one BowlerConfigSO per named bowler.")]
+    [SerializeField] private BowlerRosterSO bowlerRoster;
 
     [Header("Surface Configs")]
-    [Tooltip("Physical properties of the pitch strip (harder, less friction).")]
+    [Tooltip("Physical properties of the pitch strip.")]
     [SerializeField] private SurfaceConfigSO pitchSurfaceConfig;
-    [Tooltip("Physical properties of the outfield (softer, more friction).")]
+    [Tooltip("Physical properties of the outfield.")]
     [SerializeField] private SurfaceConfigSO outfieldSurfaceConfig;
 
-    public CricketGameConstants GetGameConstants() => gameConstants;
+    // ── Accessors ─────────────────────────────────────────────────────────────
 
-    public SurfaceConfigSO GetPitchSurfaceConfig() => pitchSurfaceConfig;
-
-    public SurfaceConfigSO GetOutfieldSurfaceConfig() => outfieldSurfaceConfig;
+    public CricketGameConstants GetGameConstants()    => gameConstants;
+    public BowlerRosterSO       GetBowlerRoster()     => bowlerRoster;
+    public SurfaceConfigSO      GetPitchSurfaceConfig()    => pitchSurfaceConfig;
+    public SurfaceConfigSO      GetOutfieldSurfaceConfig() => outfieldSurfaceConfig;
 
     /// <summary>
-    /// Returns the surface config appropriate for the given world-space position.
-    /// On pitch → pitch config, everywhere else → outfield config.
+    /// Returns the surface config for the given world-space position.
+    /// Inside pitch XZ bounds → pitch config; everywhere else → outfield config.
     /// </summary>
     public SurfaceConfigSO GetSurfaceConfig(Vector3 worldPosition)
     {
         return gameConstants.IsOnPitch(worldPosition) ? pitchSurfaceConfig : outfieldSurfaceConfig;
-    }
-
-    /// <summary>
-    /// Finds the BowlerConfig matching the given type and arm.
-    /// Logs a descriptive error and returns null if no match exists —
-    /// callers must handle the null case.
-    /// </summary>
-    public BowlerConfig GetBowlerConfig(BowlerType bowlerType, BowlerBowlingArm bowlerBowlingArm)
-    {
-        foreach (var config in bowlerConfigData.bowlerConfigs)
-        {
-            if (config.bowlerType == bowlerType && config.bowlerBowlingArm == bowlerBowlingArm)
-                return config;
-        }
-
-        Debug.LogError($"[CricketDataController] No BowlerConfig found for {bowlerType} / {bowlerBowlingArm}. " +
-                       "Check the BowlerConfigData asset.");
-        return null;
     }
 }

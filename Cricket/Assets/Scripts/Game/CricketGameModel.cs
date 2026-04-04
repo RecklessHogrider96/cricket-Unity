@@ -2,42 +2,89 @@ using UnityEngine;
 
 /// <summary>
 /// Central runtime state for the cricket game.
-/// Holds the active bowler selection and delegates all data lookups
-/// to CricketDataController — never touches ScriptableObjects directly.
+///
+/// Bowler selection flow:
+///   HUD bowler dropdown → SetSelectedBowler(BowlerConfigSO)
+///   HUD sliders         → SetDeliverySpeed / SetDeliverySpin / SetDeliverySwing
+///   CricketGameController (Space) → GetThrowParameters(markerPos) → BallThrowData
+///
+/// Delivery values are driven directly by the HUD sliders — no random sampling
+/// during gameplay. The HUD initialises the sliders to the bowler's midpoint
+/// ranges when a new bowler is selected.
 /// </summary>
 public class CricketGameModel : Singleton<CricketGameModel>
 {
-    [SerializeField] private BowlerType bowlerType;
-    [SerializeField] private BowlerBowlingArm bowlingArm;
     [SerializeField] private CricketDataController cricketDataController;
 
-    // ── Bowler selection ────────────────────────────────────────────────────
+    [Header("Runtime State (Inspector shows current values — read-only in play mode)")]
+    [SerializeField] private BowlerConfigSO selectedBowler;
+    [SerializeField] private BowlerBowlingArm bowlingArm;
 
-    public void SetBowlerType(BowlerType type) => bowlerType = type;
-    public BowlerType GetBowlerType() => bowlerType;
+    // Current per-delivery values — set by HUD sliders
+    private float currentSpeed;
+    private float currentSpin;
+    private float currentSwing;
+
+    // ── Bowler selection ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Called by the HUD when the bowler dropdown changes.
+    /// Auto-sets bowlingArm when the bowler has a fixed arm preference (Left or Right).
+    /// When preference is Both, bowlingArm is left at whatever the HUD dropdown last set.
+    /// Resets delivery params to sensible defaults; HUD sliders overwrite them immediately.
+    /// </summary>
+    public void SetSelectedBowler(BowlerConfigSO bowler)
+    {
+        selectedBowler = bowler;
+
+        if (bowler == null) return;
+
+        // Auto-set the active arm for fixed-arm bowlers.
+        // Both → leave bowlingArm unchanged so the HUD arm dropdown keeps control.
+        switch (bowler.bowlerArm)
+        {
+            case BowlerArmPreference.Left:  bowlingArm = BowlerBowlingArm.Left;  break;
+            case BowlerArmPreference.Right: bowlingArm = BowlerBowlingArm.Right; break;
+        }
+
+        // Default delivery values to midpoints; HUD overwrites via slider callbacks.
+        currentSpeed = (bowler.minSpeed + bowler.maxSpeed) * 0.5f;
+        currentSpin  = 0f;   // default to straight (HUD will set via slider)
+        currentSwing = 0f;
+    }
+
+    public BowlerConfigSO GetSelectedBowler() => selectedBowler;
 
     public void SetBowlingArm(BowlerBowlingArm arm) => bowlingArm = arm;
     public BowlerBowlingArm GetBowlingArm() => bowlingArm;
 
-    // ── Data access ─────────────────────────────────────────────────────────
+    // ── Per-delivery parameter setters (driven by HUD sliders) ───────────────
+
+    public void SetDeliverySpeed(float speed) => currentSpeed = speed;
+    public void SetDeliverySpin(float spin)   => currentSpin  = spin;
+    public void SetDeliverySwing(float swing) => currentSwing = swing;
+
+    public float GetDeliverySpeed() => currentSpeed;
+    public float GetDeliverySpin()  => currentSpin;
+    public float GetDeliverySwing() => currentSwing;
+
+    // ── Data access ──────────────────────────────────────────────────────────
 
     public CricketDataController GetDataController() => cricketDataController;
 
     // ── Throw parameter assembly ─────────────────────────────────────────────
 
     /// <summary>
-    /// Builds a BallThrowData for the current bowler type and arm by sampling
-    /// all ranges from the matching BowlerConfigSO.
-    /// Returns safe fallback data and logs an error if no config is found.
+    /// Builds the BallThrowData from the currently selected bowler and
+    /// the delivery values last set by the HUD sliders.
+    /// Returns a safe fallback and logs an error if no bowler is selected.
     /// </summary>
     public BallThrowData GetThrowParameters(Vector3 bounceTarget)
     {
-        BowlerConfig config = cricketDataController.GetBowlerConfig(bowlerType, bowlingArm);
-
-        if (config == null)
+        if (selectedBowler == null)
         {
-            Debug.LogError("[CricketGameModel] GetThrowParameters: bowler config not found. " +
-                           "Returning fallback throw data.");
+            Debug.LogError("[CricketGameModel] GetThrowParameters called but no bowler is selected. " +
+                           "Select a bowler in the HUD first.");
             return new BallThrowData
             {
                 bounceTarget = bounceTarget,
@@ -48,18 +95,12 @@ public class CricketGameModel : Singleton<CricketGameModel>
             };
         }
 
-        BowlerConfigSO so = config.bowlerConfigSO;
-
-        float speed  = Random.Range(so.minSpeed, so.maxSpeed);
-        float spin   = Random.Range(so.minSpin,  so.maxSpin);
-        float swing  = Random.Range(so.minSwing, so.maxSwing) * so.swingDirection;
-
         return new BallThrowData
         {
             bounceTarget = bounceTarget,
-            speed        = speed,
-            spin         = spin,
-            swingAmount  = swing,
+            speed        = currentSpeed,
+            spin         = currentSpin,
+            swingAmount  = currentSwing,   // already signed from HUD swing slider
             bowlingArm   = bowlingArm
         };
     }
