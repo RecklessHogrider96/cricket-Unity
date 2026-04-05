@@ -39,6 +39,32 @@ public class BowlerConfigSO : ScriptableObject
              "per delivery (useful for generic template bowlers).")]
     public BowlerArmPreference bowlerArm = BowlerArmPreference.Right;
 
+    // ── Release Points ────────────────────────────────────────────────────────
+
+    [Header("Release Points (World-Space)")]
+
+    [Tooltip("World-space position from which the ball is released when bowling OVER the wicket.\n\n" +
+             "Over the wicket = natural side for the bowler's arm:\n" +
+             "• Right-arm bowler → stands to the LEFT  of the stumps (from batsman's view) → positive X\n" +
+             "• Left-arm  bowler → stands to the RIGHT of the stumps (from batsman's view) → negative X\n\n" +
+             "Typical values (right-arm, pitch at Z = 0 → 20 m, stumps at X = 0):\n" +
+             "  X ≈ +0.3 to +0.5 m   (just outside the return crease)\n" +
+             "  Y ≈  2.0 to  2.3 m   (release height — tall fast bowler ≈ 2.3 m)\n" +
+             "  Z ≈  1.2 to  2.0 m   (just past the bowling crease)")]
+    public Vector3 overTheWicketReleasePoint = new Vector3(0.4f, 2.1f, 1.5f);
+
+    [Tooltip("World-space position from which the ball is released when bowling AROUND the wicket.\n\n" +
+             "Around the wicket = opposite side to the bowler's natural arm:\n" +
+             "• Right-arm bowler → stands to the RIGHT of the stumps (from batsman's view) → negative X\n" +
+             "• Left-arm  bowler → stands to the LEFT  of the stumps (from batsman's view) → positive X\n\n" +
+             "Typical values (right-arm):\n" +
+             "  X ≈ −0.3 to −0.5 m\n" +
+             "  Y ≈  2.0 to  2.3 m\n" +
+             "  Z ≈  1.2 to  2.0 m\n\n" +
+             "Around the wicket brings a different angle of attack to the batsman — particularly\n" +
+             "effective for right-arm bowlers targeting left-handed batsmen and vice versa.")]
+    public Vector3 aroundTheWicketReleasePoint = new Vector3(-0.4f, 2.1f, 1.5f);
+
     // ── Speed ─────────────────────────────────────────────────────────────────
 
     [Header("Speed (m/s)  —  how fast the ball travels down the pitch")]

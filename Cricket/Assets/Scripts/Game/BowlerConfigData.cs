@@ -14,6 +14,18 @@ public enum BowlerBowlingArm
 }
 
 /// <summary>
+/// Which side of the wicket the bowler approaches from for a given delivery.
+/// Over   = natural side (right-arm bowler stands left  of stumps from batsman's view).
+/// Around = other side   (right-arm bowler stands right of stumps from batsman's view).
+/// The choice changes the bowler's release point and the angle of attack.
+/// </summary>
+public enum WicketApproach
+{
+    Over,
+    Around
+}
+
+/// <summary>
 /// Whether a bowler delivers with a fixed arm or can bowl with either.
 /// Left / Right → arm is fixed; the HUD hides the arm selector and the model
 /// auto-sets BowlerBowlingArm when that bowler is chosen.

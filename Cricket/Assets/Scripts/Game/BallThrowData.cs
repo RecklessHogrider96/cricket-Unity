@@ -7,6 +7,14 @@ using UnityEngine;
 [System.Serializable]
 public struct BallThrowData
 {
+    /// <summary>
+    /// World-space position from which the ball is released.
+    /// Taken from BowlerConfigSO.overTheWicketReleasePoint or aroundTheWicketReleasePoint
+    /// depending on the WicketApproach selected in the HUD.
+    /// BallController uses this as the Phase 1 trajectory origin.
+    /// </summary>
+    public Vector3 releasePoint;
+
     /// <summary>World-space position where the ball should pitch (first bounce).</summary>
     public Vector3 bounceTarget;
 

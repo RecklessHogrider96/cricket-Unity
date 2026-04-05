@@ -50,9 +50,9 @@ public class BallController : MonoBehaviour
 {
     [SerializeField] private List<Vector3> trajectoryPoints = new List<Vector3>();
 
-    private Vector3   startPosition;
+    private Vector3   resetPosition;   // where the ball returns to after each delivery (scene transform)
     private Coroutine moveCoroutine;
-    private float     trajectoryStep; // time between consecutive trajectory points — set during baking
+    private float     trajectoryStep;  // time between consecutive trajectory points — set during baking
 
     private const int   MaxBounces    = 20;
     private const int   MaxRollSteps  = 600;    // 600 × simulationStep (0.02 s default) = 12 s max rolling
@@ -62,7 +62,10 @@ public class BallController : MonoBehaviour
 
     private void OnEnable()
     {
-        startPosition = transform.position;
+        // Cache the scene-placed position so ResetBall() can return the ball
+        // to its visual resting spot. The actual physics origin comes from
+        // BallThrowData.releasePoint, which is set per-bowler in BowlerConfigSO.
+        resetPosition = transform.position;
         ThrowBallEvent.Instance.AddListener(OnThrowBallEvent);
     }
 
@@ -123,14 +126,18 @@ public class BallController : MonoBehaviour
             : g;
 
         // ── Solve Phase 1 initial velocities ─────────────────────────────────
-        float distX = data.bounceTarget.x - startPosition.x;
-        float distY = data.bounceTarget.y - startPosition.y;
-        float distZ = data.bounceTarget.z - startPosition.z;
+        // Use data.releasePoint (from BowlerConfigSO via CricketGameModel) as the
+        // physics origin.  resetPosition is kept separately for the visual ball reset.
+        Vector3 release = data.releasePoint;
+
+        float distX = data.bounceTarget.x - release.x;
+        float distY = data.bounceTarget.y - release.y;
+        float distZ = data.bounceTarget.z - release.z;
 
         float horizontalDist = Mathf.Sqrt(distX * distX + distZ * distZ);
         if (horizontalDist < 0.001f)
         {
-            Debug.LogWarning("[BallController] Bounce target is at the same XZ as ball start.");
+            Debug.LogWarning("[BallController] Bounce target is at the same XZ as the release point.");
             return false;
         }
 
@@ -140,12 +147,18 @@ public class BallController : MonoBehaviour
         float vy0 = (distY + 0.5f * effectiveG      * T * T) / T;
 
         // ── Phase 1: flight to bounce point ──────────────────────────────────
-        for (float t = 0f; t < T; t += dt)
+        // Integer-index loop: t = i * dt rather than accumulating t += dt each step.
+        // Each t is computed fresh via multiply — no rounding drift between machines.
+        // The condition  (float)i * dt < T  mirrors the original  t < T  semantics
+        // exactly, so the same number of points are generated as before and the gap
+        // before bounceTarget stays small (matching old behaviour → smooth playback).
+        for (int i = 0; (float)i * dt < T; i++)
         {
+            float t = i * dt;
             Vector3 p;
-            p.x = startPosition.x + vx0 * t + 0.5f * effectiveSwing * t * t;
-            p.y = startPosition.y + vy0 * t  - 0.5f * effectiveG    * t * t;
-            p.z = startPosition.z + vz  * t;
+            p.x = release.x + vx0 * t + 0.5f * effectiveSwing * t * t;
+            p.y = release.y + vy0 * t  - 0.5f * effectiveG    * t * t;
+            p.z = release.z + vz  * t;
             trajectoryPoints.Add(p);
         }
 
@@ -309,7 +322,7 @@ public class BallController : MonoBehaviour
         if (moveCoroutine != null)
             StopCoroutine(moveCoroutine);
 
-        transform.position = startPosition;
+        transform.position = resetPosition;
     }
 
     // ── Editor visualisation ──────────────────────────────────────────────────

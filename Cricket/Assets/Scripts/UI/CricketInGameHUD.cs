@@ -54,6 +54,12 @@ public class CricketInGameHUD : MonoBehaviour
     [Header("Bowler Selection")]
     [SerializeField] private TMP_Dropdown bowlerDropdown;
 
+    [Header("Wicket Approach")]
+    [Tooltip("Two-option dropdown: 'Over the Wicket' (index 0) and 'Around the Wicket' (index 1).\n" +
+             "Selecting either option calls CricketGameModel.SetWicketApproach, which determines\n" +
+             "which release point is read from the active BowlerConfigSO on the next delivery.")]
+    [SerializeField] private TMP_Dropdown approachDropdown;
+
     [Header("Speed — all bowlers")]
     [SerializeField] private Slider   speedSlider;
     [SerializeField] private TMP_Text speedLabel;
@@ -85,6 +91,7 @@ public class CricketInGameHUD : MonoBehaviour
 
         PopulateWeatherDropdown();
         PopulateBowlerDropdown();
+        PopulateApproachDropdown();
         SubscribeListeners();
 
         // Initialise with the first weather preset
@@ -94,6 +101,9 @@ public class CricketInGameHUD : MonoBehaviour
         // Initialise with the first bowler (fires all Refresh* methods)
         if (roster != null && roster.bowlers.Count > 0)
             OnBowlerSelected(0);
+
+        // Default to Over the Wicket
+        OnApproachSelected(0);
     }
 
     private void OnDisable()
@@ -118,6 +128,18 @@ public class CricketInGameHUD : MonoBehaviour
         foreach (WeatherConfigSO preset in weatherRoster.weathers)
             options.Add(new TMP_Dropdown.OptionData(preset != null ? preset.weatherName : "(null)"));
         weatherDropdown.AddOptions(options);
+    }
+
+    private void PopulateApproachDropdown()
+    {
+        if (approachDropdown == null) return;
+
+        approachDropdown.ClearOptions();
+        approachDropdown.AddOptions(new List<TMP_Dropdown.OptionData>
+        {
+            new TMP_Dropdown.OptionData("Over the Wicket"),
+            new TMP_Dropdown.OptionData("Around the Wicket")
+        });
     }
 
     private void PopulateBowlerDropdown()
@@ -146,6 +168,11 @@ public class CricketInGameHUD : MonoBehaviour
             weatherDropdown.onValueChanged.RemoveListener(OnWeatherSelected);
             weatherDropdown.onValueChanged.AddListener(OnWeatherSelected);
         }
+        if (approachDropdown != null)
+        {
+            approachDropdown.onValueChanged.RemoveListener(OnApproachSelected);
+            approachDropdown.onValueChanged.AddListener(OnApproachSelected);
+        }
         if (bowlerDropdown != null)
         {
             bowlerDropdown.onValueChanged.RemoveListener(OnBowlerSelected);
@@ -171,6 +198,7 @@ public class CricketInGameHUD : MonoBehaviour
     private void UnsubscribeListeners()
     {
         weatherDropdown?.onValueChanged.RemoveListener(OnWeatherSelected);
+        approachDropdown?.onValueChanged.RemoveListener(OnApproachSelected);
         bowlerDropdown?.onValueChanged.RemoveListener(OnBowlerSelected);
         speedSlider?.onValueChanged.RemoveListener(OnSpeedChanged);
         swingSlider?.onValueChanged.RemoveListener(OnSwingChanged);
@@ -192,6 +220,13 @@ public class CricketInGameHUD : MonoBehaviour
         if (weatherSummaryLabel == null) return;
         weatherSummaryLabel.text =
             CricketGameModel.Instance.GetDataController().GenerateWeatherSummary(weather);
+    }
+
+    private void OnApproachSelected(int index)
+    {
+        // Index 0 = Over the Wicket, Index 1 = Around the Wicket
+        WicketApproach approach = index == 0 ? WicketApproach.Over : WicketApproach.Around;
+        CricketGameModel.Instance.SetWicketApproach(approach);
     }
 
     private void OnBowlerSelected(int index)

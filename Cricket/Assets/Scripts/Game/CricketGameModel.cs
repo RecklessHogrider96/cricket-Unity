@@ -21,6 +21,7 @@ public class CricketGameModel : Singleton<CricketGameModel>
     [SerializeField] private BowlerConfigSO  selectedBowler;
     [SerializeField] private WeatherConfigSO selectedWeather;
     [SerializeField] private BowlerBowlingArm bowlingArm;
+    [SerializeField] private WicketApproach  currentApproach = WicketApproach.Over;
 
     // Current per-delivery values — set by HUD sliders
     private float currentSpeed;
@@ -72,6 +73,15 @@ public class CricketGameModel : Singleton<CricketGameModel>
     public void SetBowlingArm(BowlerBowlingArm arm) => bowlingArm = arm;
     public BowlerBowlingArm GetBowlingArm() => bowlingArm;
 
+    // ── Wicket approach ──────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Called by the HUD Over/Around dropdown.
+    /// Determines which release point is read from the selected BowlerConfigSO.
+    /// </summary>
+    public void SetWicketApproach(WicketApproach approach) => currentApproach = approach;
+    public WicketApproach GetWicketApproach() => currentApproach;
+
     // ── Per-delivery parameter setters (driven by HUD sliders) ───────────────
 
     public void SetDeliverySpeed(float speed) => currentSpeed = speed;
@@ -101,6 +111,7 @@ public class CricketGameModel : Singleton<CricketGameModel>
                            "Select a bowler in the HUD first.");
             return new BallThrowData
             {
+                releasePoint = Vector3.zero,
                 bounceTarget = bounceTarget,
                 speed        = 30f,
                 spin         = 0f,
@@ -109,8 +120,14 @@ public class CricketGameModel : Singleton<CricketGameModel>
             };
         }
 
+        // Pick the release point that matches the currently selected wicket approach.
+        Vector3 releasePoint = currentApproach == WicketApproach.Over
+            ? selectedBowler.overTheWicketReleasePoint
+            : selectedBowler.aroundTheWicketReleasePoint;
+
         return new BallThrowData
         {
+            releasePoint = releasePoint,
             bounceTarget = bounceTarget,
             speed        = currentSpeed,
             spin         = currentSpin,

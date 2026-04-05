@@ -11,10 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
   m_Name: ZaheerKhan
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   bowlerName: Zaheer Khan
   bowlerType: 1
   bowlerArm: 0
+  overTheWicketReleasePoint: {x: -0.4, y: 1.65, z: -15}
+  aroundTheWicketReleasePoint: {x: 0.4, y: 1.65, z: -15}
   minSpeed: 36
   maxSpeed: 40
   minSwing: 0.4

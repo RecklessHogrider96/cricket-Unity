@@ -11,10 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560b46a119483ea4fa52572f90cba1c6, type: 3}
   m_Name: LasithMalinga
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   bowlerName: Lasith Malinga
   bowlerType: 0
   bowlerArm: 1
+  overTheWicketReleasePoint: {x: 0.45, y: 1.35, z: -15}
+  aroundTheWicketReleasePoint: {x: -0.45, y: 1.35, z: -15}
   minSpeed: 37
   maxSpeed: 41
   minSwing: 0.2
