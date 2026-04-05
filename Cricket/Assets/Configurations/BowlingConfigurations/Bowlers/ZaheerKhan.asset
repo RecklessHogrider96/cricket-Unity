@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Zaheer Khan
   bowlerType: 1
   bowlerArm: 0
-  overTheWicketReleasePoint: {x: -0.4, y: 1.65, z: -15}
-  aroundTheWicketReleasePoint: {x: 0.4, y: 1.65, z: -15}
+  overTheWicketReleasePoint: {x: -0.4, y: 1.65, z: 1.5}
+  aroundTheWicketReleasePoint: {x: 0.4, y: 1.65, z: 1.5}
   minSpeed: 36
   maxSpeed: 40
   minSwing: 0.4

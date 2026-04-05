@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Wasim Akram
   bowlerType: 0
   bowlerArm: 0
-  overTheWicketReleasePoint: {x: -0.4, y: 1.69, z: -15}
-  aroundTheWicketReleasePoint: {x: 0.4, y: 1.69, z: -15}
+  overTheWicketReleasePoint: {x: -0.4, y: 1.69, z: 1.5}
+  aroundTheWicketReleasePoint: {x: 0.4, y: 1.69, z: 1.5}
   minSpeed: 35
   maxSpeed: 42
   minSwing: 0.5

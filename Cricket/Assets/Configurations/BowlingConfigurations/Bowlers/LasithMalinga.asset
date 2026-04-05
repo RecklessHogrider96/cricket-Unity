@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Lasith Malinga
   bowlerType: 0
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.45, y: 1.35, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.45, y: 1.35, z: -15}
+  overTheWicketReleasePoint: {x: 0.45, y: 1.35, z: 1.4}
+  aroundTheWicketReleasePoint: {x: -0.45, y: 1.35, z: 1.4}
   minSpeed: 37
   maxSpeed: 41
   minSwing: 0.2

@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Anil Kumble
   bowlerType: 2
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.4, y: 1.7, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.4, y: 1.7, z: -15}
+  overTheWicketReleasePoint: {x: 0.4, y: 1.7, z: 1.5}
+  aroundTheWicketReleasePoint: {x: -0.4, y: 1.7, z: 1.5}
   minSpeed: 21
   maxSpeed: 25
   minSwing: 0

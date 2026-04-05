@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Jasprit Bumrah
   bowlerType: 0
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.35, y: 1.48, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.35, y: 1.48, z: -15}
+  overTheWicketReleasePoint: {x: 0.35, y: 1.48, z: 1.4}
+  aroundTheWicketReleasePoint: {x: -0.35, y: 1.48, z: 1.4}
   minSpeed: 38
   maxSpeed: 43
   minSwing: 0.3

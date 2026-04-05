@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Mitchell Johnson
   bowlerType: 0
   bowlerArm: 0
-  overTheWicketReleasePoint: {x: -0.45, y: 1.59, z: -15}
-  aroundTheWicketReleasePoint: {x: 0.45, y: 1.59, z: -15}
+  overTheWicketReleasePoint: {x: -0.45, y: 1.59, z: 1.6}
+  aroundTheWicketReleasePoint: {x: 0.45, y: 1.59, z: 1.6}
   minSpeed: 40
   maxSpeed: 44
   minSwing: 0.4

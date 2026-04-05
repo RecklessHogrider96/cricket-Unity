@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Dale Steyn
   bowlerType: 0
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.4, y: 1.72, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.4, y: 1.72, z: -15}
+  overTheWicketReleasePoint: {x: 0.4, y: 1.72, z: 1.5}
+  aroundTheWicketReleasePoint: {x: -0.4, y: 1.72, z: 1.5}
   minSpeed: 38
   maxSpeed: 44
   minSwing: 0.4

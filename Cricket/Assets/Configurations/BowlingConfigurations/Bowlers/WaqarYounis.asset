@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Waqar Younis
   bowlerType: 0
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.4, y: 1.54, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.4, y: 1.54, z: -15}
+  overTheWicketReleasePoint: {x: 0.4, y: 1.54, z: 1.5}
+  aroundTheWicketReleasePoint: {x: -0.4, y: 1.54, z: 1.5}
   minSpeed: 38
   maxSpeed: 44
   minSwing: 0.5

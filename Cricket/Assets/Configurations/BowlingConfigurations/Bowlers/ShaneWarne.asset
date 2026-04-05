@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Shane Warne
   bowlerType: 2
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.4, y: 1.61, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.4, y: 1.61, z: -15}
+  overTheWicketReleasePoint: {x: 0.4, y: 1.61, z: 1.5}
+  aroundTheWicketReleasePoint: {x: -0.4, y: 1.61, z: 1.5}
   minSpeed: 20
   maxSpeed: 24
   minSwing: 0

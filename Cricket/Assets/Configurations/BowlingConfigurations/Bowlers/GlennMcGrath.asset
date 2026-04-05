@@ -15,8 +15,8 @@ MonoBehaviour:
   bowlerName: Glenn McGrath
   bowlerType: 1
   bowlerArm: 1
-  overTheWicketReleasePoint: {x: 0.4, y: 1.81, z: -15}
-  aroundTheWicketReleasePoint: {x: -0.4, y: 1.81, z: -15}
+  overTheWicketReleasePoint: {x: 0.4, y: 1.81, z: 1.5}
+  aroundTheWicketReleasePoint: {x: -0.4, y: 1.81, z: 1.5}
   minSpeed: 32
   maxSpeed: 38
   minSwing: 0.2
