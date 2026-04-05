@@ -4,8 +4,9 @@ using UnityEngine;
 /// Central runtime state for the cricket game.
 ///
 /// Bowler selection flow:
-///   HUD bowler dropdown → SetSelectedBowler(BowlerConfigSO)
-///   HUD sliders         → SetDeliverySpeed / SetDeliverySpin / SetDeliverySwing
+///   HUD bowler dropdown  → SetSelectedBowler(BowlerConfigSO)
+///   HUD weather dropdown → SetSelectedWeather(WeatherConfigSO)
+///   HUD sliders          → SetDeliverySpeed / SetDeliverySpin / SetDeliverySwing
 ///   CricketGameController (Space) → GetThrowParameters(markerPos) → BallThrowData
 ///
 /// Delivery values are driven directly by the HUD sliders — no random sampling
@@ -17,7 +18,8 @@ public class CricketGameModel : Singleton<CricketGameModel>
     [SerializeField] private CricketDataController cricketDataController;
 
     [Header("Runtime State (Inspector shows current values — read-only in play mode)")]
-    [SerializeField] private BowlerConfigSO selectedBowler;
+    [SerializeField] private BowlerConfigSO  selectedBowler;
+    [SerializeField] private WeatherConfigSO selectedWeather;
     [SerializeField] private BowlerBowlingArm bowlingArm;
 
     // Current per-delivery values — set by HUD sliders
@@ -49,11 +51,23 @@ public class CricketGameModel : Singleton<CricketGameModel>
 
         // Default delivery values to midpoints; HUD overwrites via slider callbacks.
         currentSpeed = (bowler.minSpeed + bowler.maxSpeed) * 0.5f;
-        currentSpin  = 0f;   // default to straight (HUD will set via slider)
+        currentSpin  = 0f;
         currentSwing = 0f;
     }
 
     public BowlerConfigSO GetSelectedBowler() => selectedBowler;
+
+    // ── Weather selection ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Called by the HUD when the weather dropdown changes.
+    /// The selected WeatherConfigSO is read by BallController at throw time.
+    /// Passing null clears any active weather (all offsets become zero / multipliers become 1).
+    /// </summary>
+    public void SetSelectedWeather(WeatherConfigSO weather) => selectedWeather = weather;
+    public WeatherConfigSO GetSelectedWeather() => selectedWeather;
+
+    // ── Arm ──────────────────────────────────────────────────────────────────
 
     public void SetBowlingArm(BowlerBowlingArm arm) => bowlingArm = arm;
     public BowlerBowlingArm GetBowlingArm() => bowlingArm;

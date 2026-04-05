@@ -9,46 +9,54 @@ using UnityEngine;
 /// ── Physics model ────────────────────────────────────────────────────────────
 ///
 /// Phase 1 — Pre-bounce flight (bowler release → pitch marker)
-///   x(t) = x0 + vx0·t + ½·swingAcc·t²   (swing = constant lateral acceleration, m/s²)
-///   y(t) = y0 + vy0·t − ½·g·t²           (g = positive magnitude from CricketGameConstants)
+///
+///   Weather is folded in before any equations run:
+///     effectiveSwing  = (bowlerSwing × weather.swingMultiplier) + weather.windX
+///     effectiveSpeed  = bowlerSpeed + weather.windZ                (changes T)
+///     effectiveG      = gravity − weather.windY                    (updraft reduces gravity)
+///
+///   x(t) = x0 + vx0·t + ½·effectiveSwing·t²
+///   y(t) = y0 + vy0·t − ½·effectiveG·t²
 ///   z(t) = z0 + vz·t
 ///
-///   Initial velocities are solved analytically so the ball arrives exactly at
-///   bounceTarget at t = T = horizontalDistance / speed.
+///   Solved analytically so the ball always arrives at bounceTarget:
+///     T   = horizontalDistance / effectiveSpeed
 ///     vz  = distZ / T
-///     vx0 = (distX − ½·swingAcc·T²) / T
-///     vy0 = (distY + ½·g·T²) / T
+///     vx0 = (distX − ½·effectiveSwing·T²) / T
+///     vy0 = (distY + ½·effectiveG·T²) / T
 ///
-/// Phase 2a — Bouncing (Euler integration, fixed timeStep = Time.fixedDeltaTime)
-///   Each step:  velocity.y -= g · dt
+/// Phase 2a — Bouncing (Euler integration, step = Time.fixedDeltaTime)
+///   Each step:  velocity.y -= effectiveG · dt
 ///               position   += velocity · dt
 ///   Ground contact (position.y ≤ groundLevel):
-///     • Snap ball to groundLevel  ← done BEFORE adding point to trajectory
-///     • Reflect:  velocity.y = −velocity.y · surface.bounceFactor
-///     • Friction: velocity.xz *= surface.frictionFactor
-///     • Spin:     velocity.x  += spin · armSign  (first bounce only)
+///     bounceFactor   = surface.bounceFactor   + weather.pitchBounceDelta   (clamped 0–1)
+///     frictionFactor = surface.frictionFactor + weather.pitchFrictionDelta (clamped 0–1)
+///     • Snap position.y to groundLevel BEFORE adding to trajectory
+///     • Reflect:  velocity.y  = −velocity.y · bounceFactor
+///     • Friction: velocity.xz *= frictionFactor
+///     • Spin:     velocity.x  += bowlerSpin · weather.spinGripMultiplier  (first bounce only)
 ///   Surface (pitch vs outfield) chosen per-contact via CricketGameConstants.IsOnPitch().
 ///
-/// Phase 2b — Rolling (after bounces become negligible)
-///   Ball locked to groundLevel; horizontal speed decays by surface.rollingFriction
-///   per step until speed < 0.05 m/s.
+/// Phase 2b — Rolling
+///   rollingFriction = outfield.rollingFriction + weather.outfieldRollingDelta (clamped 0.8–1)
+///   Ball locked to groundLevel; horizontal speed decays until speed < 0.05 m/s.
 ///
 /// ── Coroutine playback ───────────────────────────────────────────────────────
-///   Each trajectory point was calculated one fixedDeltaTime apart.
-///   The coroutine maps real elapsed time → point index, interpolating between
-///   adjacent points. This correctly represents the ball slowing after each bounce
-///   without any speed-based segment calculation.
+///   All trajectory points are one simulationStep apart (from CricketGameConstants).
+///   The step used during baking is stored in trajectoryStep and re-used by the
+///   coroutine, so both always agree regardless of Unity's physics settings or framerate.
 /// </summary>
 public class BallController : MonoBehaviour
 {
     [SerializeField] private List<Vector3> trajectoryPoints = new List<Vector3>();
 
-    private Vector3 startPosition;
+    private Vector3   startPosition;
     private Coroutine moveCoroutine;
+    private float     trajectoryStep; // time between consecutive trajectory points — set during baking
 
-    private const int MaxBounces  = 20;
-    private const int MaxRollSteps = 600;   // 600 × 0.02 s = 12 s max rolling time
-    private const float RollStopSpeed = 0.05f; // m/s — below this the ball is considered still
+    private const int   MaxBounces    = 20;
+    private const int   MaxRollSteps  = 600;    // 600 × simulationStep (0.02 s default) = 12 s max rolling
+    private const float RollStopSpeed = 0.05f;  // m/s — below this the ball is considered still
 
     // ── Event wiring ─────────────────────────────────────────────────────────
 
@@ -83,14 +91,38 @@ public class BallController : MonoBehaviour
 
     private bool BuildTrajectory(BallThrowData data)
     {
-        CricketGameConstants constants =
-            CricketGameModel.Instance.GetDataController().GetGameConstants();
+        CricketDataController dataCtrl  = CricketGameModel.Instance.GetDataController();
+        CricketGameConstants  constants = dataCtrl.GetGameConstants();
+        WeatherConfigSO       weather   = CricketGameModel.Instance.GetSelectedWeather();
 
-        float g           = constants.gravity;          // positive magnitude, applied downward
+        float g           = constants.gravity;
         float groundLevel = constants.groundLevel;
-        float dt          = Time.fixedDeltaTime;
+        // Read simulation step from the SO — independent of Unity's physics timestep and framerate.
+        // Stored in trajectoryStep so the playback coroutine uses the exact same value.
+        float dt          = constants.simulationStep;
+        trajectoryStep    = dt;
+        bool  hasWeather  = weather != null;
 
-        // ── Solve Phase 1 initial velocities ─────────────────────────────
+        // ── Apply weather to Phase 1 parameters ──────────────────────────────
+
+        // Wind Z: headwind/tailwind shifts effective speed → changes flight time T
+        float effectiveSpeed = hasWeather
+            ? Mathf.Max(1f, data.speed + weather.windZ)
+            : data.speed;
+
+        // Wind X: constant lateral force on top of bowler swing
+        // Swing multiplier: atmosphere boosts or reduces conventional swing
+        float effectiveSwing = hasWeather
+            ? (data.swingAmount * weather.swingMultiplier) + weather.windX
+            : data.swingAmount;
+
+        // Wind Y: updraft/downdraft modifies effective gravity
+        // Positive windY = updraft = reduces effective downward pull
+        float effectiveG = hasWeather
+            ? Mathf.Max(0.1f, g - weather.windY)
+            : g;
+
+        // ── Solve Phase 1 initial velocities ─────────────────────────────────
         float distX = data.bounceTarget.x - startPosition.x;
         float distY = data.bounceTarget.y - startPosition.y;
         float distZ = data.bounceTarget.z - startPosition.z;
@@ -102,18 +134,17 @@ public class BallController : MonoBehaviour
             return false;
         }
 
-        float T    = horizontalDist / data.speed;
-        float vz   = distZ / T;
-        float swingAcc = data.swingAmount;
-        float vx0  = (distX - 0.5f * swingAcc * T * T) / T;
-        float vy0  = (distY + 0.5f * g * T * T) / T;
+        float T   = horizontalDist / effectiveSpeed;
+        float vz  = distZ / T;
+        float vx0 = (distX - 0.5f * effectiveSwing * T * T) / T;
+        float vy0 = (distY + 0.5f * effectiveG      * T * T) / T;
 
-        // ── Phase 1: flight to bounce point ──────────────────────────────
+        // ── Phase 1: flight to bounce point ──────────────────────────────────
         for (float t = 0f; t < T; t += dt)
         {
             Vector3 p;
-            p.x = startPosition.x + vx0 * t + 0.5f * swingAcc * t * t;
-            p.y = startPosition.y + vy0 * t  - 0.5f * g        * t * t;
+            p.x = startPosition.x + vx0 * t + 0.5f * effectiveSwing * t * t;
+            p.y = startPosition.y + vy0 * t  - 0.5f * effectiveG    * t * t;
             p.z = startPosition.z + vz  * t;
             trajectoryPoints.Add(p);
         }
@@ -123,29 +154,35 @@ public class BallController : MonoBehaviour
 
         // Velocity at the moment the ball reaches the bounce point
         Vector3 velocity = new Vector3(
-            vx0 + swingAcc * T,
-            vy0 - g * T,        // negative = moving downward
+            vx0 + effectiveSwing * T,
+            vy0 - effectiveG     * T,   // negative = moving downward at impact
             vz
         );
 
-        // ── Phase 2a + 2b: bouncing then rolling ──────────────────────────
-        BuildPostBounceTrajectory(data.bounceTarget, velocity, data, g, groundLevel, dt);
+        // ── Phase 2a + 2b: bouncing then rolling ──────────────────────────────
+        BuildPostBounceTrajectory(
+            data.bounceTarget, velocity, data,
+            effectiveG, groundLevel, dt,
+            weather, dataCtrl);
 
         return trajectoryPoints.Count > 1;
     }
 
     private void BuildPostBounceTrajectory(
-        Vector3 position, Vector3 velocity,
-        BallThrowData data,
-        float g, float groundLevel, float dt)
+        Vector3               position,
+        Vector3               velocity,
+        BallThrowData         data,
+        float                 g,
+        float                 groundLevel,
+        float                 dt,
+        WeatherConfigSO       weather,
+        CricketDataController dataCtrl)
     {
-        CricketDataController dataCtrl =
-            CricketGameModel.Instance.GetDataController();
-
+        bool hasWeather  = weather != null;
         bool spinApplied = false;
-        int   bounceCount = 0;
+        int  bounceCount = 0;
 
-        // ── Phase 2a: Bouncing ────────────────────────────────────────────
+        // ── Phase 2a: Bouncing ────────────────────────────────────────────────
         while (bounceCount < MaxBounces)
         {
             velocity.y -= g * dt;
@@ -159,18 +196,28 @@ public class BallController : MonoBehaviour
 
                 SurfaceConfigSO surface = dataCtrl.GetSurfaceConfig(position);
 
+                // Weather offsets applied to bounce factors (clamped to valid range)
+                float bounceFactor = hasWeather
+                    ? Mathf.Clamp01(surface.bounceFactor   + weather.pitchBounceDelta)
+                    : surface.bounceFactor;
+
+                float frictionFactor = hasWeather
+                    ? Mathf.Clamp01(surface.frictionFactor + weather.pitchFrictionDelta)
+                    : surface.frictionFactor;
+
                 // Vertical reflection
-                velocity.y = -velocity.y * surface.bounceFactor;
+                velocity.y = -velocity.y * bounceFactor;
 
                 // Horizontal damping at impact
-                velocity.x *= surface.frictionFactor;
-                velocity.z *= surface.frictionFactor;
+                velocity.x *= frictionFactor;
+                velocity.z *= frictionFactor;
 
-                // Spin applied once, on the first bounce only
+                // Spin applied once, on the first bounce only.
+                // spinGripMultiplier: wet pitch = less turn, dusty pitch = more turn.
                 if (!spinApplied)
                 {
-                    // data.spin is already signed (direction baked in by HUD slider)
-                    velocity.x += data.spin;
+                    float spinGrip = hasWeather ? weather.spinGripMultiplier : 1f;
+                    velocity.x += data.spin * spinGrip;
                     spinApplied = true;
                 }
 
@@ -188,19 +235,24 @@ public class BallController : MonoBehaviour
             }
         }
 
-        // ── Phase 2b: Rolling — smooth ground-level deceleration ─────────
+        // ── Phase 2b: Rolling — smooth ground-level deceleration ─────────────
         SurfaceConfigSO rollSurface = dataCtrl.GetSurfaceConfig(position);
 
-        position.y  = groundLevel;
-        velocity.y  = 0f;
+        // Weather offset on rolling friction (clamped to a sensible minimum)
+        float rollingFriction = hasWeather
+            ? Mathf.Clamp(rollSurface.rollingFriction + weather.outfieldRollingDelta, 0.8f, 1f)
+            : rollSurface.rollingFriction;
+
+        position.y = groundLevel;
+        velocity.y = 0f;
 
         for (int step = 0; step < MaxRollSteps; step++)
         {
             float horizontalSpeed = Mathf.Sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
             if (horizontalSpeed < RollStopSpeed) break;
 
-            velocity.x *= rollSurface.rollingFriction;
-            velocity.z *= rollSurface.rollingFriction;
+            velocity.x *= rollingFriction;
+            velocity.z *= rollingFriction;
             position.x += velocity.x * dt;
             position.z += velocity.z * dt;
             // position.y stays locked to groundLevel
@@ -213,17 +265,19 @@ public class BallController : MonoBehaviour
 
     /// <summary>
     /// Maps real elapsed time to the pre-baked trajectory array.
-    /// Because every point was calculated one fixedDeltaTime apart, elapsed / dt
-    /// gives the correct index. Interpolation between adjacent points keeps the
-    /// ball visually smooth even when the frame rate doesn't align with dt.
-    /// The ball naturally appears to slow down after each bounce because
-    /// post-bounce points are physically closer together.
+    /// Because every point was calculated one simulationStep apart, elapsed / dt
+    /// gives the correct index regardless of framerate.
+    /// Interpolation between adjacent points keeps the ball visually smooth even
+    /// when the render frame rate doesn't align with the simulation step.
+    /// The ball naturally slows down after each bounce because post-bounce points
+    /// are physically closer together.
     /// </summary>
     private IEnumerator MoveBallAlongTrajectory()
     {
         if (trajectoryPoints.Count < 2) yield break;
 
-        float dt      = Time.fixedDeltaTime;
+        // Use the same step that was used to bake the trajectory — guaranteed to match.
+        float dt      = trajectoryStep;
         float elapsed = 0f;
         int   last    = trajectoryPoints.Count - 1;
 
@@ -231,7 +285,7 @@ public class BallController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
 
-            int   index = Mathf.FloorToInt(elapsed / dt);
+            int index = Mathf.FloorToInt(elapsed / dt);
             if (index >= last)
             {
                 transform.position = trajectoryPoints[last];

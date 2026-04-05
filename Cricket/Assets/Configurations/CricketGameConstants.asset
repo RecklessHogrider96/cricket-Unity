@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CricketGameConstants
   m_EditorClassIdentifier:
   gravity: 9.81
+  simulationStep: 0.02
   groundLevel: 0
   pitchMinX: -1.52
   pitchMaxX: 1.52

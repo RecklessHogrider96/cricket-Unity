@@ -12,6 +12,13 @@ public class CricketGameConstants : ScriptableObject
              "Standard value is 9.81; 10 is a common cricket-simulation simplification.")]
     public float gravity = 9.81f;
 
+    [Tooltip("Fixed time step used for the ball simulation, in seconds.\n\n" +
+             "Every trajectory point is exactly this many seconds apart. " +
+             "The playback coroutine uses this same value to map elapsed time → point index, " +
+             "guaranteeing they always agree regardless of Unity's physics settings or framerate.\n\n" +
+             "0.02 s = 50 Hz simulation (recommended). Smaller = more accurate arc but more points.")]
+    public float simulationStep = 0.02f;
+
     [Header("Ground")]
     [Tooltip("World-space Y position of the playing surface. " +
              "Set this to match the top of the pitch/ground mesh in your scene.")]
