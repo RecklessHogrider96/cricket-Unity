@@ -62,6 +62,15 @@ public class CricketGameController : MonoBehaviour
              "Real value = 0.09685 m.")]
     [SerializeField] private float stumpSpacing = 0.09685f;
 
+    // ── Inspector — Cameras ───────────────────────────────────────────────────
+
+    [Header("Cameras")]
+
+    [Tooltip("All gameplay cameras. Only the active one is enabled at a time.\n" +
+             "Press Tab at runtime to cycle forward through the list.\n" +
+             "The first camera in the list is activated on Start; the rest are disabled.")]
+    [SerializeField] private Camera[] cameras = new Camera[0];
+
     // ── Inspector — Debug ─────────────────────────────────────────────────────
 
     [Header("Debug Overlay")]
@@ -80,6 +89,7 @@ public class CricketGameController : MonoBehaviour
 
     private GameObject stumpsContainer;  // parent for all spawned stump cylinders
     private GameObject debugContainer;  // parent for all debug LineRenderers
+    private int activeCameraIndex;       // index into cameras[] of the currently enabled camera
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -87,6 +97,7 @@ public class CricketGameController : MonoBehaviour
     {
         AlignSceneObjects();
         RefreshDebugVisuals();
+        InitialiseCameras();
     }
 
     private void OnDestroy()
@@ -117,12 +128,49 @@ public class CricketGameController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
             GetPitchMarkerPositionEvent.Instance.Invoke(OnMarkerPositionReceived);
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+            CycleCamera();
     }
 
     private void OnMarkerPositionReceived(Vector3 markerPosition)
     {
         BallThrowData throwData = CricketGameModel.Instance.GetThrowParameters(markerPosition);
         ThrowBallEvent.Instance.Invoke(throwData);
+    }
+
+    // ── Camera cycling ────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Enables only cameras[0] and disables all others.
+    /// Called once on Start so the scene state is always consistent regardless
+    /// of how the cameras were left in the editor.
+    /// </summary>
+    private void InitialiseCameras()
+    {
+        if (cameras == null || cameras.Length == 0) return;
+
+        activeCameraIndex = 0;
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            if (cameras[i] != null)
+                cameras[i].gameObject.SetActive(i == 0);
+        }
+    }
+
+    /// <summary>
+    /// Disables the current camera, advances the index (wrapping at the end),
+    /// and enables the next one.
+    /// </summary>
+    private void CycleCamera()
+    {
+        if (cameras == null || cameras.Length <= 1) return;
+
+        cameras[activeCameraIndex]?.gameObject.SetActive(false);
+
+        activeCameraIndex = (activeCameraIndex + 1) % cameras.Length;
+
+        cameras[activeCameraIndex]?.gameObject.SetActive(true);
     }
 
     // ── Scene object alignment ────────────────────────────────────────────────
