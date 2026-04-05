@@ -85,6 +85,14 @@ public class CricketGameController : MonoBehaviour
              "Alpha controls Scene-view fill opacity; Game-view lines are fully opaque.")]
     [SerializeField] private Color debugPitchColour = new Color(0.15f, 0.85f, 0.25f, 0.25f);
 
+    [Tooltip("Time scale applied while the Minus key (or Numpad −) is held.\n" +
+             "Default 0.01 = 100× slower than real time.  Only active when Debug Mode is on.")]
+    [SerializeField] private float debugSlowTimeScale = 0.01f;
+
+    [Tooltip("Time scale applied while the Plus/Equals key (or Numpad +) is held.\n" +
+             "Default 10 = 10× faster than real time.  Only active when Debug Mode is on.")]
+    [SerializeField] private float debugFastTimeScale = 10f;
+
     // ── Runtime state ─────────────────────────────────────────────────────────
 
     private GameObject stumpsContainer;  // parent for all spawned stump cylinders
@@ -131,12 +139,43 @@ public class CricketGameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Tab))
             CycleCamera();
+
+        HandleDebugTimeScale();
     }
 
     private void OnMarkerPositionReceived(Vector3 markerPosition)
     {
         BallThrowData throwData = CricketGameModel.Instance.GetThrowParameters(markerPosition);
         ThrowBallEvent.Instance.Invoke(throwData);
+    }
+
+    // ── Debug time scale ──────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Holds Minus / Numpad−  → slow to debugSlowTimeScale (default ÷100).
+    /// Holds Plus  / Numpad+  → speed up to debugFastTimeScale (default ×10).
+    /// Releasing either key   → restores Time.timeScale to 1.
+    /// Only active when debugMode is true; also restores scale if debugMode is
+    /// turned off while a key is still held.
+    /// </summary>
+    private void HandleDebugTimeScale()
+    {
+        if (!debugMode)
+        {
+            if (Time.timeScale != 1f)
+                Time.timeScale = 1f;
+            return;
+        }
+
+        bool slow = Input.GetKey(KeyCode.Minus)  || Input.GetKey(KeyCode.KeypadMinus);
+        bool fast = Input.GetKey(KeyCode.Equals) || Input.GetKey(KeyCode.KeypadPlus);
+
+        if (slow)
+            Time.timeScale = debugSlowTimeScale;
+        else if (fast)
+            Time.timeScale = debugFastTimeScale;
+        else
+            Time.timeScale = 1f;
     }
 
     // ── Camera cycling ────────────────────────────────────────────────────────
